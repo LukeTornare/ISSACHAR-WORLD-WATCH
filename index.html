@@ -7,7 +7,3317 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin<!DOCTYPE html>
-<html lang="en"><!DOCTYPE html>
+<html lang="en"><!DOCTYP<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISSACHAR ALLIANCE // WORLD WATCH MAP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --cyan: #00d4ff;
+  --cyan-dim: #007ea8;
+  --green: #4ade80;
+  --red: #f43f5e;
+  --amber: #f59e0b;
+  --blue: #3b82f6;
+  --bg: #07101f;
+  --panel-bg: rgba(8,18,38,0.82);
+  --panel-border: rgba(0,212,255,0.1);
+  --text: #8fb8cc;
+  --text-bright: #c4dce8;
+  --sans: 'Inter', system-ui, sans-serif;
+  --orb: 'Syne', sans-serif;
+}
+html, body { width:100%; height:100%; background:var(--bg); color:var(--text); font-family:var(--sans); overflow:hidden; }
+
+/* ── Subtle vignette ── */
+#vignette {
+  position:fixed; inset:0; z-index:9998; pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%);
+}
+
+/* ── Navbar ── */
+#navbar {
+  position:fixed; top:0; left:0; right:0; height:56px; z-index:300;
+  background:rgba(6,12,26,0.95); border-bottom:1px solid rgba(0,212,255,0.08);
+  backdrop-filter:blur(24px);
+  display:flex; align-items:center; padding:0 20px; gap:16px;
+}
+.logo { font-family:var(--orb); font-size:14px; font-weight:800; letter-spacing:1.5px; color:var(--cyan); }
+.logo span { color:rgba(143,184,204,0.45); font-weight:700; font-size:11px; letter-spacing:1px; }
+#nav-subtitle { font-size:10px; color:rgba(0,212,255,0.28); font-weight:300; letter-spacing:3px; }
+#nav-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+#rec-indicator {
+  display:flex; align-items:center; gap:6px; font-size:10px; font-weight:500;
+  color:rgba(74,222,128,0.85); background:rgba(74,222,128,0.07);
+  padding:5px 12px; border-radius:20px; border:1px solid rgba(74,222,128,0.15);
+}
+#rec-dot { width:6px; height:6px; border-radius:50%; background:#4ade80; box-shadow:0 0 8px rgba(74,222,128,0.8); animation:recblink 2s infinite; flex-shrink:0; }
+@keyframes recblink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+#timestamp { color:rgba(143,184,204,0.55); font-size:10px; font-variant-numeric:tabular-nums; }
+#active-count { font-size:10px; font-weight:500; color:rgba(0,212,255,0.5); padding:5px 12px; border-radius:20px; background:rgba(0,212,255,0.06); border:1px solid rgba(0,212,255,0.12); }
+.home-link { font-size:10px; font-weight:500; color:rgba(0,212,255,0.6); text-decoration:none; padding:5px 14px; border-radius:8px; border:1px solid rgba(0,212,255,0.16); background:rgba(0,212,255,0.05); transition:all 0.2s; }
+.home-link:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,212,255,0.1); }
+
+/* ── Globe ── */
+#globe-el { position:fixed; top:56px; left:0; right:0; bottom:110px; z-index:1; }
+
+/* ── Floating Panels ── */
+.panel {
+  position:fixed; top:64px; bottom:110px; z-index:50;
+  width:274px; overflow-y:auto; overflow-x:hidden;
+  background:var(--panel-bg); border:1px solid var(--panel-border);
+  backdrop-filter:blur(28px); border-radius:16px;
+  display:flex; flex-direction:column; gap:0;
+  box-shadow:0 8px 40px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.03) inset;
+}
+#left-panel { left:14px; }
+#right-panel { right:14px; }
+
+.p-section { padding:12px 14px; border-bottom:1px solid rgba(0,212,255,0.06); }
+.p-section:last-child { border:none; }
+.p-title {
+  font-size:10px; font-weight:600; letter-spacing:2px;
+  color:rgba(0,212,255,0.65); margin-bottom:10px; padding-bottom:7px;
+  border-bottom:1px solid rgba(0,212,255,0.08);
+  display:flex; align-items:center; gap:7px;
+}
+.p-title-icon { font-size:12px; }
+
+/* ── Divider labels ── */
+.layer-divider {
+  font-size:9px; font-weight:600; letter-spacing:2px;
+  color:rgba(0,212,255,0.22); padding:4px 0 8px; text-transform:uppercase;
+}
+
+/* ── Layer toggle rows ── */
+.layer-item {
+  display:flex; align-items:center; gap:10px;
+  padding:7px 8px; border-radius:10px; margin-bottom:2px;
+  transition:background 0.15s;
+}
+.layer-item:hover { background:rgba(0,212,255,0.04); }
+.li-icon { font-size:12px; width:16px; text-align:center; flex-shrink:0; }
+.li-body { flex:1; min-width:0; }
+.li-name { font-size:10px; font-weight:500; color:rgba(196,220,232,0.7); display:flex; align-items:center; gap:5px; }
+.li-badge {
+  font-size:9px; font-weight:600; color:rgba(0,212,255,0.38);
+  background:rgba(0,212,255,0.07); padding:1px 6px; border-radius:10px; margin-left:auto;
+}
+.li-badge.live { color:#4ade80; background:rgba(74,222,128,0.1); }
+.li-src { font-size:9px; color:rgba(0,110,145,0.6); margin-top:1px; }
+
+/* ── Toggle pill ── */
+.tog {
+  width:40px; height:20px; border-radius:10px; flex-shrink:0; cursor:pointer;
+  background:rgba(0,12,28,0.85); border:1px solid rgba(0,212,255,0.14);
+  position:relative; transition:all 0.25s;
+}
+.tog .tog-k {
+  position:absolute; width:14px; height:14px; border-radius:50%;
+  background:rgba(80,105,125,0.8); top:2px; left:2px;
+  transition:left 0.25s, background 0.25s; z-index:1;
+}
+.tog.on { background:rgba(0,55,80,0.9); border-color:rgba(0,212,255,0.4); box-shadow:0 0 12px rgba(0,212,255,0.1); }
+.tog.on .tog-k { left:22px; background:var(--cyan); box-shadow:0 0 8px rgba(0,212,255,0.55); }
+
+/* ── Legend ── */
+.leg-item { display:flex; align-items:center; gap:8px; font-size:9px; color:var(--text); margin-bottom:5px; }
+.leg-sw { width:14px; height:10px; border-radius:3px; flex-shrink:0; }
+
+/* ── Country info ── */
+#cname {
+  font-family:var(--orb); font-size:13px; font-weight:800; letter-spacing:0.5px;
+  color:var(--cyan); padding-bottom:9px; border-bottom:1px solid rgba(0,212,255,0.1); margin-bottom:10px;
+}
+.drow { display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:10px; border-bottom:1px solid rgba(0,212,255,0.04); }
+.drow .lbl { color:rgba(0,130,165,0.8); font-weight:400; }
+.drow .val { color:var(--text-bright); font-weight:600; }
+.drow .val.extreme { color:var(--red); }
+.drow .val.very-high { color:#fb923c; }
+.drow .val.high { color:var(--amber); }
+.dsec { font-size:9px; font-weight:600; letter-spacing:2px; padding:8px 0 3px; margin-top:4px; border-top:1px solid rgba(0,212,255,0.07); }
+.dsec.red { color:#f87171; }
+.dsec.blue { color:#60a5fa; }
+.dsec.purple { color:#c084fc; }
+.dsec.orange { color:#fb923c; }
+.dsec.teal { color:#2dd4bf; }
+.dsec.cyan { color:var(--cyan); }
+.dsec.green { color:#4ade80; }
+.dsec.yellow { color:#fbbf24; }
+.cnotes { font-size:9px; color:var(--text); opacity:0.75; line-height:1.6; margin-top:6px; padding:7px 10px; background:rgba(244,63,94,0.04); border-left:2px solid rgba(244,63,94,0.28); border-radius:0 5px 5px 0; }
+.cnotes-alt { font-size:9px; color:var(--text); opacity:0.75; line-height:1.6; margin-top:6px; padding:7px 10px; background:rgba(0,212,255,0.03); border-left:2px solid rgba(0,212,255,0.16); border-radius:0 5px 5px 0; }
+.hint { color:rgba(0,212,255,0.18); font-size:11px; text-align:center; padding:24px 0; font-weight:400; }
+
+/* ── Control tooltip ── */
+#ctrl-tip {
+  position:fixed; display:none; z-index:9999; pointer-events:none;
+  max-width:196px; padding:7px 11px; line-height:1.55;
+  background:rgba(4,10,26,0.97); border:1px solid rgba(0,212,255,0.2);
+  border-radius:9px; backdrop-filter:blur(14px);
+  color:rgba(180,220,235,0.88); font-size:10.5px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,212,255,0.05) inset;
+}
+#ctrl-tip.show { display:block; }
+
+/* ── Visual controls ── */
+.vc-row { display:flex; align-items:center; justify-content:space-between; padding:6px 0; font-size:10px; color:rgba(0,212,255,0.5); border-bottom:1px solid rgba(0,212,255,0.05); }
+.vc-row:last-child { border:none; }
+.vc-btns { display:flex; gap:4px; margin-bottom:8px; }
+.vc-btn { flex:1; padding:5px 0; font-size:9px; font-weight:500; background:rgba(0,212,255,0.04); border:1px solid rgba(0,212,255,0.12); color:rgba(0,212,255,0.45); cursor:pointer; border-radius:7px; transition:all 0.15s; }
+.vc-btn:hover { border-color:rgba(0,212,255,0.3); color:rgba(0,212,255,0.75); }
+.vc-btn.active { background:rgba(0,212,255,0.12); border-color:var(--cyan); color:var(--cyan); }
+.vc-lbl { font-size:9px; font-weight:500; letter-spacing:1px; color:rgba(0,212,255,0.3); margin-bottom:5px; }
+
+/* ── Stats ── */
+.stat { padding:6px 0; border-bottom:1px solid rgba(0,212,255,0.07); }
+.stat:last-child { border:none; }
+.stat-val { font-family:var(--orb); font-size:20px; font-weight:800; line-height:1; color:var(--cyan); }
+.stat-lbl { font-size:9px; color:var(--cyan-dim); margin-top:2px; font-weight:500; }
+
+/* ── Stats bar ── */
+#stats-bar {
+  position:fixed; bottom:26px; left:0; right:0; min-height:84px; z-index:200;
+  background:rgba(6,12,26,0.94); border-top:1px solid rgba(0,212,255,0.08);
+  backdrop-filter:blur(20px); display:flex; flex-direction:column;
+}
+#stats-header-row {
+  height:22px; display:flex; align-items:center; padding:0 18px;
+  border-bottom:1px solid rgba(0,212,255,0.06);
+  background:rgba(0,212,255,0.02); gap:10px;
+}
+#stats-context-label {
+  font-size:9px; font-weight:600; letter-spacing:2px; color:rgba(0,212,255,0.4);
+}
+#stats-context-name {
+  font-size:9px; font-weight:600; letter-spacing:2px; color:var(--cyan);
+  display:none;
+}
+#stats-reset-hint {
+  margin-left:8px; font-size:9px; color:rgba(0,212,255,0.2); cursor:pointer; display:none;
+}
+#stats-cards { flex:1; display:flex; align-items:stretch; }
+.sc {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:4px 8px; border-right:1px solid rgba(0,212,255,0.06);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1); position:relative; cursor:default;
+}
+.sc:last-child { border:none; }
+.sc:hover { background:rgba(0,212,255,0.03); }
+.sc-val {
+  font-family:var(--sans); font-size:20px; font-weight:700; line-height:1;
+  letter-spacing:-0.5px; color:var(--cyan); transition:all 0.4s; white-space:nowrap;
+}
+.sc-lbl {
+  font-size:8px; font-weight:500; letter-spacing:1px; color:rgba(0,137,170,0.7);
+  margin-top:3px; text-align:center; transition:all 0.4s; white-space:nowrap;
+}
+.sc-flag {
+  position:absolute; top:3px; left:50%; transform:translateX(-50%);
+  font-size:7px; color:rgba(0,212,255,0.2); white-space:nowrap;
+}
+
+/* ── Stat popup ── */
+#stat-popup {
+  position:fixed;
+  bottom:112px;
+  width:280px;
+  z-index:400;
+  background:rgba(4,10,26,0.97);
+  border:1px solid rgba(0,212,255,0.2);
+  border-radius:12px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 -4px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.04) inset;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  transition:opacity 0.18s;
+}
+#stat-popup.show { display:flex; }
+#stat-popup-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 12px; border-bottom:1px solid rgba(0,212,255,0.1);
+  background:rgba(0,212,255,0.03);
+}
+#stat-popup-title {
+  font-size:9px; font-weight:700; letter-spacing:2px; color:var(--cyan);
+}
+#stat-popup-btns { display:flex; gap:6px; }
+#stat-popup-btns button {
+  background:none; border:1px solid rgba(0,212,255,0.18); color:rgba(0,212,255,0.6);
+  font-size:10px; cursor:pointer; border-radius:5px; padding:2px 6px;
+  transition:all 0.15s;
+}
+#stat-popup-btns button:hover { border-color:var(--cyan); color:var(--cyan); }
+#btn-pin-stat.pinned { background:rgba(0,212,255,0.15); color:var(--cyan); border-color:var(--cyan); }
+#stat-popup-body {
+  padding:10px 12px; font-size:10px; max-height:220px; overflow-y:auto;
+}
+.sp-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:4px 0; border-bottom:1px solid rgba(0,212,255,0.05);
+  font-size:10px;
+}
+.sp-row:last-child { border:none; }
+.sp-lbl { color:rgba(0,150,185,0.75); }
+.sp-val { color:var(--text-bright); font-weight:600; }
+.sp-note {
+  font-size:9px; color:rgba(140,190,210,0.65); line-height:1.6;
+  margin-top:8px; padding:6px 8px;
+  background:rgba(0,212,255,0.03); border-left:2px solid rgba(0,212,255,0.15);
+  border-radius:0 4px 4px 0;
+}
+.sp-section-title {
+  font-size:8px; font-weight:700; letter-spacing:2px;
+  color:rgba(0,212,255,0.35); padding:7px 0 3px; border-top:1px solid rgba(0,212,255,0.07);
+  margin-top:4px;
+}
+
+/* ── Stats expand panel ── */
+#stats-expand-panel {
+  display:none; flex-wrap:wrap; gap:0;
+  border-top:1px solid rgba(0,212,255,0.08);
+  max-height:0; overflow:hidden;
+  transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+#stats-expand-panel.open {
+  display:flex; max-height:220px;
+}
+.sep-card {
+  flex:1; min-width:16.6%; padding:8px 10px;
+  border-right:1px solid rgba(0,212,255,0.06);
+  font-size:9px;
+}
+.sep-card:last-child { border:none; }
+.sep-card-title {
+  font-size:8px; font-weight:700; letter-spacing:1.5px;
+  color:rgba(0,212,255,0.4); margin-bottom:6px;
+}
+.sep-row { display:flex; justify-content:space-between; padding:2px 0; }
+.sep-lbl { color:rgba(0,130,160,0.7); }
+.sep-val { color:var(--text-bright); font-weight:600; }
+.sep-note { font-size:8px; color:rgba(140,185,205,0.5); margin-top:5px; line-height:1.5; }
+
+/* ── Expand button ── */
+#btn-expand-stats {
+  margin-left:auto; background:rgba(0,212,255,0.05);
+  border:1px solid rgba(0,212,255,0.15); color:rgba(0,212,255,0.45);
+  font-size:8px; font-weight:700; letter-spacing:1px; cursor:pointer;
+  border-radius:5px; padding:2px 8px; transition:all 0.15s;
+}
+#btn-expand-stats:hover { border-color:rgba(0,212,255,0.4); color:rgba(0,212,255,0.8); }
+#btn-expand-stats.open { background:rgba(0,212,255,0.12); color:var(--cyan); border-color:var(--cyan); }
+
+/* ── Bottom bar ── */
+#bottom-bar {
+  position:fixed; bottom:0; left:0; right:0; height:26px; z-index:300;
+  background:rgba(5,10,22,0.97); border-top:1px solid rgba(0,212,255,0.07);
+  backdrop-filter:blur(16px); display:flex; align-items:center; padding:0 16px; gap:20px;
+  font-size:9px; color:rgba(0,150,180,0.45);
+}
+#status-msg { color:rgba(0,212,255,0.45); }
+#layer-status { color:rgba(0,212,255,0.3); font-weight:500; }
+#coords { margin-left:auto; color:rgba(74,222,128,0.6); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:rgba(0,212,255,0.02); }
+::-webkit-scrollbar-thumb { background:rgba(0,212,255,0.14); border-radius:3px; }
+
+/* ── Globe tooltip ── */
+.gt {
+  font-family:var(--sans); background:rgba(8,18,38,0.97);
+  border:1px solid rgba(0,212,255,0.22); border-radius:12px;
+  padding:10px 14px; max-width:200px; pointer-events:none; font-size:10px;
+  box-shadow:0 10px 28px rgba(0,0,0,0.45);
+}
+.gt-name { font-size:11px; font-weight:700; color:#00d4ff; margin-bottom:6px; padding-bottom:5px; border-bottom:1px solid rgba(0,212,255,0.14); }
+.gt-row { display:flex; justify-content:space-between; gap:12px; font-size:9px; margin:3px 0; }
+.gt-lbl { color:rgba(0,130,165,0.8); }
+.gt-red { color:#f87171; } .gt-blue { color:#60a5fa; } .gt-purple { color:#c084fc; } .gt-orange { color:#fb923c; } .gt-val { color:#c4dce8; }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.blink { animation:blink 1.2s infinite; }
+
+/* ── Welcome Modal ── */
+#welcome-modal {
+  position:fixed; inset:0; z-index:10000;
+  background:rgba(3,8,20,0.88); backdrop-filter:blur(14px);
+  display:flex; align-items:center; justify-content:center;
+}
+#welcome-box {
+  background:rgba(8,17,36,0.98); border:1px solid rgba(0,212,255,0.18);
+  box-shadow:0 28px 80px rgba(0,0,0,0.5), 0 0 80px rgba(0,212,255,0.05);
+  width:560px; max-width:92vw; position:relative; border-radius:20px; overflow:hidden;
+}
+#wm-head {
+  background:rgba(0,212,255,0.04); border-bottom:1px solid rgba(0,212,255,0.1);
+  padding:18px 24px; display:flex; align-items:center; justify-content:space-between;
+}
+#wm-title { font-family:var(--orb); font-size:13px; font-weight:800; letter-spacing:1px; color:var(--cyan); }
+#wm-close {
+  width:30px; height:30px; border-radius:50%; border:1px solid rgba(0,212,255,0.18);
+  background:rgba(0,212,255,0.05); color:rgba(0,212,255,0.6);
+  font-size:14px; cursor:pointer; display:flex; align-items:center;
+  justify-content:center; transition:all 0.15s;
+}
+#wm-close:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,212,255,0.12); }
+#wm-body { padding:20px 24px; }
+#wm-sub { font-size:10px; font-weight:300; letter-spacing:2px; color:rgba(0,212,255,0.28); margin-bottom:16px; }
+.wm-sec-title {
+  font-size:9px; font-weight:600; letter-spacing:2px;
+  color:rgba(0,212,255,0.5); margin-bottom:8px; padding-bottom:5px;
+  border-bottom:1px solid rgba(0,212,255,0.08);
+}
+.wm-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px 22px; margin-bottom:14px; }
+.wm-cmd { display:flex; gap:9px; align-items:center; padding:3px 0; }
+.wm-key {
+  font-size:9px; font-weight:600; color:var(--cyan);
+  background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.18);
+  padding:3px 8px; white-space:nowrap; flex-shrink:0; border-radius:6px;
+}
+.wm-desc { font-size:9px; font-weight:400; color:rgba(175,210,225,0.5); }
+#wm-foot {
+  border-top:1px solid rgba(0,212,255,0.08); padding:14px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+#wm-verse { font-size:9px; color:rgba(175,210,225,0.38); font-style:italic; line-height:1.8; }
+#wm-enter {
+  font-family:var(--orb); font-size:9px; font-weight:800; letter-spacing:1px;
+  background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.28);
+  color:var(--cyan); padding:10px 22px; cursor:pointer; transition:all 0.2s; border-radius:9px;
+}
+#wm-enter:hover { background:rgba(0,212,255,0.18); border-color:var(--cyan); box-shadow:0 0 24px rgba(0,212,255,0.14); }
+
+/* ── 3D / 2D View Toggle ── */
+#view-toggle {
+  display:flex; border-radius:8px; overflow:hidden;
+  border:1px solid rgba(0,212,255,0.16); background:rgba(0,10,24,0.7);
+}
+.view-btn {
+  padding:5px 16px; font-size:10px; font-weight:600; cursor:pointer;
+  background:transparent; border:none; color:rgba(0,212,255,0.4);
+  font-family:var(--sans); transition:all 0.2s; letter-spacing:1px;
+}
+.view-btn.active { background:rgba(0,212,255,0.14); color:var(--cyan); }
+.view-btn:hover:not(.active) { color:rgba(0,212,255,0.7); background:rgba(0,212,255,0.06); }
+
+/* ── Collapsible dropdown sections ── */
+.dd-section { border-bottom:1px solid rgba(0,212,255,0.06); }
+.dd-section:last-child { border:none; }
+.dd-header {
+  display:flex; align-items:center; gap:7px;
+  padding:10px 14px; cursor:pointer; user-select:none;
+  font-size:9px; font-weight:700; letter-spacing:2px;
+  color:rgba(0,212,255,0.55);
+  transition:background 0.15s, color 0.15s;
+  position:relative;
+}
+.dd-header:hover { background:rgba(0,212,255,0.04); color:rgba(0,212,255,0.85); }
+.dd-header.open { color:var(--cyan); }
+.dd-chevron {
+  margin-left:auto; font-size:8px; color:rgba(0,212,255,0.35);
+  transition:transform 0.25s; display:inline-block;
+}
+.dd-header.open .dd-chevron { transform:rotate(180deg); color:var(--cyan); }
+.dd-content {
+  max-height:0; overflow:hidden;
+  transition:max-height 0.32s cubic-bezier(0.4,0,0.2,1);
+}
+.dd-content.open { max-height:1200px; }
+.dd-inner { padding:4px 14px 10px; }
+
+/* ── Persecution rank list ── */
+#persecution-list {
+  overflow-y:auto; flex:1; padding:4px 0;
+}
+.pr-item {
+  display:flex; align-items:center; gap:8px;
+  padding:5px 14px; cursor:pointer;
+  transition:background 0.14s; border-bottom:1px solid rgba(0,212,255,0.04);
+}
+.pr-item:last-child { border:none; }
+.pr-item:hover { background:rgba(0,212,255,0.06); }
+.pr-rank {
+  font-size:9px; font-weight:700; color:rgba(0,212,255,0.28);
+  width:18px; text-align:right; flex-shrink:0; font-family:var(--sans);
+}
+.pr-name { font-size:10px; font-weight:500; flex:1; color:var(--text-bright); }
+.pr-score {
+  font-size:9px; font-weight:700; font-family:var(--sans);
+  padding:1px 5px; border-radius:4px; flex-shrink:0;
+}
+.pr-score.extreme { background:rgba(183,28,28,0.25); color:#ef5350; }
+.pr-score.very-high { background:rgba(230,81,0,0.2); color:#ff7043; }
+.pr-score.high { background:rgba(245,127,23,0.18); color:#ffa726; }
+.pr-item:hover .pr-name { color:var(--cyan); }
+
+/* ── Ship Markers (htmlElementsData) ── */
+.ship-marker {
+  position:relative; width:36px; height:36px;
+  cursor:pointer; user-select:none;
+}
+.ship-ping {
+  position:absolute; inset:0;
+  border-radius:50%;
+  background:rgba(0,229,255,0.18);
+  animation:shipPing 2s cubic-bezier(0,0,0.2,1) infinite;
+}
+.ship-ping2 {
+  position:absolute; inset:0;
+  border-radius:50%;
+  background:rgba(0,229,255,0.12);
+  animation:shipPing 2s cubic-bezier(0,0,0.2,1) infinite 0.9s;
+}
+@keyframes shipPing {
+  0%   { transform:scale(0.6); opacity:0.9; }
+  70%  { transform:scale(2.2); opacity:0; }
+  100% { transform:scale(2.2); opacity:0; }
+}
+.ship-icon {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; line-height:1;
+  filter:drop-shadow(0 0 6px rgba(0,229,255,0.9)) drop-shadow(0 0 12px rgba(0,229,255,0.5));
+  z-index:2;
+}
+.ship-label {
+  position:absolute; top:calc(100% + 4px); left:50%;
+  transform:translateX(-50%);
+  font-family:var(--sans); font-size:8px; font-weight:700; letter-spacing:1.5px;
+  color:var(--cyan); white-space:nowrap;
+  text-shadow:0 0 8px rgba(0,229,255,0.8);
+  pointer-events:none;
+}
+.ship-tooltip {
+  position:absolute; bottom:calc(100% + 8px); left:50%;
+  transform:translateX(-50%);
+  background:rgba(4,12,28,0.97); border:1px solid rgba(0,229,255,0.3);
+  border-radius:6px; padding:8px 10px; min-width:200px; max-width:260px;
+  font-family:var(--sans); font-size:9px; line-height:1.5;
+  color:rgba(255,255,255,0.8); pointer-events:none;
+  opacity:0; transition:opacity 0.15s;
+  white-space:normal; z-index:99;
+}
+.ship-marker:hover .ship-tooltip { opacity:1; }
+.ship-tt-name { font-size:11px; font-weight:700; color:var(--cyan); margin-bottom:4px; }
+.ship-tt-row  { display:flex; justify-content:space-between; gap:8px; }
+.ship-tt-lbl  { color:rgba(0,229,255,0.5); }
+.ship-tt-val  { color:rgba(255,255,255,0.9); font-weight:600; }
+.ship-tt-note { margin-top:5px; font-size:8px; color:rgba(255,255,255,0.45); }
+
+/* ── Plane Markers ── */
+.plane-marker {
+  position:relative; width:36px; height:36px;
+  cursor:pointer; user-select:none;
+}
+.plane-ping {
+  position:absolute; inset:0; border-radius:50%;
+  background:rgba(245,158,11,0.18);
+  animation:planePing 1.8s cubic-bezier(0,0,0.2,1) infinite;
+}
+.plane-ping2 {
+  position:absolute; inset:0; border-radius:50%;
+  background:rgba(245,158,11,0.12);
+  animation:planePing 1.8s cubic-bezier(0,0,0.2,1) infinite 0.75s;
+}
+@keyframes planePing {
+  0%   { transform:scale(0.6); opacity:0.85; }
+  70%  { transform:scale(2.4); opacity:0; }
+  100% { transform:scale(2.4); opacity:0; }
+}
+.plane-icon {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; line-height:1;
+  filter:drop-shadow(0 0 6px rgba(245,158,11,0.95)) drop-shadow(0 0 14px rgba(245,158,11,0.5));
+  z-index:2;
+}
+.plane-icon.jaars { filter:drop-shadow(0 0 6px rgba(52,211,153,0.95)) drop-shadow(0 0 14px rgba(52,211,153,0.5)); }
+.plane-label {
+  position:absolute; top:calc(100% + 4px); left:50%;
+  transform:translateX(-50%);
+  font-family:var(--sans); font-size:8px; font-weight:700; letter-spacing:1.5px;
+  color:#f59e0b; white-space:nowrap;
+  text-shadow:0 0 8px rgba(245,158,11,0.8);
+  pointer-events:none;
+}
+.plane-label.jaars { color:#34d399; text-shadow:0 0 8px rgba(52,211,153,0.8); }
+.plane-tooltip {
+  position:absolute; bottom:calc(100% + 8px); left:50%;
+  transform:translateX(-50%);
+  background:rgba(4,12,28,0.97); border:1px solid rgba(245,158,11,0.3);
+  border-radius:6px; padding:8px 10px; min-width:210px; max-width:270px;
+  font-family:var(--sans); font-size:9px; line-height:1.5;
+  color:rgba(255,255,255,0.8); pointer-events:none;
+  opacity:0; transition:opacity 0.15s;
+  white-space:normal; z-index:99;
+}
+.plane-marker:hover .plane-tooltip { opacity:1; }
+.plane-tt-name { font-size:11px; font-weight:700; color:#f59e0b; margin-bottom:4px; }
+.plane-tt-name.jaars { color:#34d399; }
+.plane-tt-row  { display:flex; justify-content:space-between; gap:8px; }
+.plane-tt-lbl  { color:rgba(245,158,11,0.5); }
+.plane-tt-val  { color:rgba(255,255,255,0.9); font-weight:600; }
+.plane-tt-note { margin-top:5px; font-size:8px; color:rgba(255,255,255,0.45); }
+
+/* ── Live tracking indicators ── */
+.live-dot {
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:#00e676; box-shadow:0 0 5px #00e676;
+  animation:livePulse 1.4s ease-in-out infinite;
+  vertical-align:middle; flex-shrink:0;
+}
+.live-dot.ais  { background:#00e5ff; box-shadow:0 0 5px #00e5ff; }
+.live-dot.plane{ background:#f59e0b; box-shadow:0 0 5px #f59e0b; }
+.live-dot.off  { background:#94a3b8; box-shadow:none; animation:none; }
+@keyframes livePulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%     { opacity:0.35; transform:scale(0.65); }
+}
+.tt-live-badge {
+  display:inline-flex; align-items:center; gap:3px;
+  font-size:8px; font-weight:700; letter-spacing:1px;
+  padding:2px 6px; border-radius:3px; margin-top:4px;
+  background:rgba(0,230,118,0.12); color:#00e676;
+  border:1px solid rgba(0,230,118,0.3);
+}
+.tt-live-badge.ais    { background:rgba(0,229,255,0.12); color:#00e5ff; border-color:rgba(0,229,255,0.3); }
+.tt-live-badge.plane  { background:rgba(245,158,11,0.12); color:#f59e0b; border-color:rgba(245,158,11,0.3); }
+.tt-live-badge.static { background:rgba(148,163,184,0.1); color:#94a3b8; border-color:rgba(148,163,184,0.25); }
+/* AIS status chip in left panel */
+#ais-status-chip {
+  display:none; align-items:center; gap:5px;
+  font-size:8px; font-weight:700; letter-spacing:1.2px;
+  color:#00e5ff; padding:3px 8px;
+  border-top:1px solid rgba(0,229,255,0.1);
+}
+#ais-status-chip.visible { display:flex; }
+/* Refresh counter shown next to timestamp */
+.refresh-timer { font-size:7px; color:rgba(0,212,255,0.35); margin-left:4px; }
+
+#right-panel-title {
+  padding:10px 14px; font-size:9px; font-weight:700; letter-spacing:2px;
+  color:var(--cyan); border-bottom:1px solid rgba(0,212,255,0.1);
+  display:flex; align-items:center; gap:7px;
+  background:rgba(0,212,255,0.02); flex-shrink:0;
+}
+
+/* ── 10/40 Window label glow ── */
+.win1040-label {
+  font-size:9px; font-weight:600; color:rgba(245,158,11,0.55);
+  letter-spacing:1px;
+}
+/* ── Mission Flows label ── */
+.flows-label {
+  font-size:9px; font-weight:600;
+  background: linear-gradient(90deg, rgba(0,212,255,0.7), rgba(245,158,11,0.7));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; letter-spacing:1px;
+}
+</style>
+</head>
+<body>
+
+<!-- Welcome Modal -->
+<div id="welcome-modal">
+  <div id="welcome-box">
+    <div id="wm-head">
+      <div id="wm-title">WORLD WATCH MAP // OPERATOR BRIEFING</div>
+      <button id="wm-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="wm-body">
+      <div id="wm-sub">ISSACHAR ALLIANCE · PRAYER INTELLIGENCE PLATFORM · READ BEFORE ENGAGING</div>
+      <div class="wm-sec-title">⬡ GLOBE NAVIGATION</div>
+      <div class="wm-grid">
+        <div class="wm-cmd"><span class="wm-key">DRAG</span><span class="wm-desc">Rotate globe</span></div>
+        <div class="wm-cmd"><span class="wm-key">SCROLL</span><span class="wm-desc">Zoom in / out</span></div>
+        <div class="wm-cmd"><span class="wm-key">CLICK COUNTRY</span><span class="wm-desc">Open target analysis + stats</span></div>
+        <div class="wm-cmd"><span class="wm-key">CLICK MARKER</span><span class="wm-desc">View event details</span></div>
+        <div class="wm-cmd"><span class="wm-key">CLICK GLOBE</span><span class="wm-desc">Reset to global overview</span></div>
+      </div>
+      <div class="wm-sec-title">◎ LEFT PANEL — INTEL LAYERS</div>
+      <div class="wm-grid">
+        <div class="wm-cmd"><span class="wm-key">OVERLAY SELECT</span><span class="wm-desc">Switch country heat map</span></div>
+        <div class="wm-cmd"><span class="wm-key">INTEL TOGGLES</span><span class="wm-desc">Enable live event layers</span></div>
+        <div class="wm-cmd"><span class="wm-key">LEGEND</span><span class="wm-desc">Color key for active overlay</span></div>
+        <div class="wm-cmd"><span class="wm-key">SOURCES</span><span class="wm-desc">Data provenance</span></div>
+      </div>
+      <div class="wm-sec-title">◈ RIGHT PANEL — GLOBE CONTROLS</div>
+      <div class="wm-grid">
+        <div class="wm-cmd"><span class="wm-key">TEXTURE</span><span class="wm-desc">Tactical / Daylight globe view</span></div>
+        <div class="wm-cmd"><span class="wm-key">ROTATION</span><span class="wm-desc">Toggle auto-rotation</span></div>
+        <div class="wm-cmd"><span class="wm-key">ATMOSPHERE</span><span class="wm-desc">Toggle glow ring</span></div>
+        <div class="wm-cmd"><span class="wm-key">GRATICULES</span><span class="wm-desc">Toggle grid lines</span></div>
+      </div>
+    </div>
+    <div id="wm-foot">
+      <div id="wm-verse">"Men who understood the times<br>and knew what Israel should do"<br><span style="color:rgba(0,229,255,0.3);font-style:normal">— 1 Chronicles 12:32</span></div>
+      <button id="wm-enter" onclick="closeModal()">ENTER MAP ▶</button>
+    </div>
+  </div>
+</div>
+<!-- closeModal defined EARLY so the button works even if the main script errors -->
+<script>
+function closeModal() {
+  var m = document.getElementById('welcome-modal');
+  if (m) {
+    m.style.transition = 'opacity 0.35s';
+    m.style.opacity = '0';
+    setTimeout(function(){ m.style.display = 'none'; }, 350);
+  }
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+</script>
+
+<div id="vignette"></div>
+<div id="globe-el"></div>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <div>
+    <div class="logo">ISSACHAR <span>// WORLD WATCH</span></div>
+    <div id="nav-subtitle">NO PLACE LEFT BEHIND</div>
+  </div>
+  <div id="nav-right">
+    <div id="view-toggle">
+      <button class="view-btn active" id="btn-3d" onclick="set3D(true)">3D</button>
+      <button class="view-btn" id="btn-2d" onclick="set3D(false)">2D</button>
+    </div>
+    <div id="rec-indicator"><div id="rec-dot"></div><span>Live</span></div>
+    <span id="timestamp">--:--:--Z</span>
+    <span id="active-count">Events: --</span>
+    <a href="index.html" class="home-link">← Mission Brief</a>
+  </div>
+</nav>
+
+<!-- LEFT PANEL -->
+<div class="panel" id="left-panel">
+
+  <!-- ① Country Overlays dropdown -->
+  <div class="dd-section">
+    <div class="dd-header open" id="ddh-overlays" onclick="toggleDD('ddc-overlays','ddh-overlays')">
+      <span class="p-title-icon">⬡</span>COUNTRY OVERLAYS
+      <span class="dd-chevron">▼</span>
+    </div>
+    <div class="dd-content open" id="ddc-overlays">
+      <div class="dd-inner" style="padding:4px 8px 8px">
+
+        <div class="layer-item" data-tip="Ranks countries by severity of Christian persecution using the Open Doors World Watch List score. Dark red = extreme persecution (score 81+). Covers legal, social, and physical pressure on believers.">
+          <span class="li-icon" style="color:#ff1744">◎</span>
+          <div class="li-body">
+            <div class="li-name">Persecution Index <span class="li-badge live" id="ct-cl-persecution">50</span></div>
+            <div class="li-src">Open Doors WWL 2026</div>
+          </div>
+          <div class="tog on" id="tog-cl-persecution" onclick="toggleCountryLayer('persecution')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Colours countries by the percentage of their population living in unreached people groups — those with no indigenous church capable of evangelising without outside help. Darker blue = higher % unreached.">
+          <span class="li-icon" style="color:#1565c0">◎</span>
+          <div class="li-body">
+            <div class="li-name">Unreached Peoples <span class="li-badge" id="ct-cl-unreached">48</span></div>
+            <div class="li-src">Joshua Project 2025</div>
+          </div>
+          <div class="tog" id="tog-cl-unreached" onclick="toggleCountryLayer('unreached')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Countries where significant populations lack the Bible in their heart language or have severely limited Scripture resources. Over 1,700 languages still have no complete Bible translation.">
+          <span class="li-icon" style="color:#00897b">◎</span>
+          <div class="li-body">
+            <div class="li-name">Bible Shortage <span class="li-badge" id="ct-cl-bible">28</span></div>
+            <div class="li-src">Wycliffe / Open Doors 2024</div>
+          </div>
+          <div class="tog" id="tog-cl-bible" onclick="toggleCountryLayer('bible')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Countries with heavy government internet censorship that blocks Christian websites, restricts gospel communication, and cuts believers off from the global church. Source: Freedom House Freedom on the Net 2024.">
+          <span class="li-icon" style="color:#e65100">◈</span>
+          <div class="li-body">
+            <div class="li-name">Internet Blackout <span class="li-badge" id="ct-cl-internet">22</span></div>
+            <div class="li-src">Freedom House FOTN 2024 · <span style="color:rgba(148,163,184,0.55)">static · Oct 2024</span></div>
+          </div>
+          <div class="tog" id="tog-cl-internet" onclick="toggleCountryLayer('internet')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Nations hosting or generating the largest refugee and displaced populations. Displacement creates acute humanitarian need and significant gospel opportunity among people open to new hope. Source: UNHCR Global Trends 2024.">
+          <span class="li-icon" style="color:#26a69a">◎</span>
+          <div class="li-body">
+            <div class="li-name">Refugee Crisis <span class="li-badge" id="ct-cl-refugees">24</span></div>
+            <div class="li-src">UNHCR Global Trends 2024 · <span style="color:rgba(148,163,184,0.55)">static · Jun 2024</span></div>
+          </div>
+          <div class="tog" id="tog-cl-refugees" onclick="toggleCountryLayer('refugees')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Countries where a high share of the population lives on less than $2.15/day. Extreme poverty intensifies vulnerability to trafficking, forced labour, and religious coercion. Source: World Bank PovcalNet 2023.">
+          <span class="li-icon" style="color:#f57f17">◎</span>
+          <div class="li-body">
+            <div class="li-name">Extreme Poverty <span class="li-badge" id="ct-cl-poverty">30</span></div>
+            <div class="li-src">World Bank PovcalNet 2023 · <span style="color:rgba(148,163,184,0.55)">static · Dec 2023</span></div>
+          </div>
+          <div class="tog" id="tog-cl-poverty" onclick="toggleCountryLayer('poverty')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="IPC Phase 3–5 food insecurity — countries facing crisis, emergency, or famine-level food shortages. Conflict is the leading driver in most cases. Source: FEWS NET / Integrated Food Security Phase Classification 2024–25.">
+          <span class="li-icon" style="color:#bf360c">▲</span>
+          <div class="li-body">
+            <div class="li-name">Famine / Food Crisis <span class="li-badge" id="ct-cl-famine">25</span></div>
+            <div class="li-src">FEWS NET / IPC 2024–25 · <span style="color:rgba(148,163,184,0.55)">static · Jan 2025</span></div>
+          </div>
+          <div class="tog" id="tog-cl-famine" onclick="toggleCountryLayer('famine')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Countries designated by the US Commission on International Religious Freedom as Countries of Particular Concern (CPC) or Special Watch List (SWL) for severe, systematic violations of religious freedom.">
+          <span class="li-icon" style="color:#b71c1c">⊘</span>
+          <div class="li-body">
+            <div class="li-name">USCIRF Tier <span class="li-badge" id="ct-cl-uscirf">30</span></div>
+            <div class="li-src">USCIRF 2025 · <span style="color:rgba(148,163,184,0.55)">static · Apr 2025</span></div>
+          </div>
+          <div class="tog" id="tog-cl-uscirf" onclick="toggleCountryLayer('uscirf')"><div class="tog-k"></div></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ② Live Events dropdown -->
+  <div class="dd-section">
+    <div class="dd-header open" id="ddh-events" onclick="toggleDD('ddc-events','ddh-events')">
+      <span class="p-title-icon">◈</span>LIVE EVENTS
+      <span class="dd-chevron">▼</span>
+    </div>
+    <div class="dd-content open" id="ddc-events">
+      <div class="dd-inner" style="padding:4px 8px 8px">
+
+        <div class="layer-item" data-tip="M4.5+ earthquakes from the last 7 days. Auto-refreshes every 5 minutes while active. Source: USGS Earthquake Hazards Program real-time feed.">
+          <span class="li-icon" style="color:#ff9100">◈</span>
+          <div class="li-body">
+            <div class="li-name">Earthquakes <span class="li-badge" id="ct-earthquakes">—</span></div>
+            <div class="li-src">USGS LIVE · updated <span id="ts-earthquakes">—</span><span class="refresh-timer" id="eq-next"> · refresh in 5:00</span></div>
+          </div>
+          <div class="tog" id="tog-earthquakes" onclick="toggleEvent('earthquakes')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Active natural disaster events globally. Auto-refreshes every 10 minutes while active. Source: NASA EONET (Earth Observatory Natural Event Tracker).">
+          <span class="li-icon" style="color:#7b1fa2">⬡</span>
+          <div class="li-body">
+            <div class="li-name">Nat. Disasters <span class="li-badge" id="ct-disasters">—</span></div>
+            <div class="li-src">NASA EONET LIVE · updated <span id="ts-disasters">—</span><span class="refresh-timer" id="dis-next"> · refresh in 10:00</span></div>
+          </div>
+          <div class="tog" id="tog-disasters" onclick="toggleEvent('disasters')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Active armed conflict zones. Static dataset — manually verified. Data as of: December 2024. Sources: ACLED, UCDP, UN OCHA.">
+          <span class="li-icon" style="color:#d50000">✕</span>
+          <div class="li-body">
+            <div class="li-name">War Zones <span class="li-badge" id="ct-war">—</span></div>
+            <div class="li-src">ACLED / UCDP · <span style="color:rgba(148,163,184,0.6)">static · as of Dec 2024</span></div>
+          </div>
+          <div class="tog" id="tog-war" onclick="toggleEvent('war')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Mission &amp; humanitarian ships. Top 5 vessels tracked live via aisstream.io WebSocket AIS (add your free key in LIVE_TRACKING config). Remaining 4 show last-known position. Positions update in real-time when AIS key is set.">
+          <span class="li-icon" style="color:#00e5ff">⛴</span>
+          <div class="li-body">
+            <div class="li-name">Mission Ships <span class="li-badge" id="ct-ships">—</span></div>
+            <div class="li-src"><span id="ais-dot" class="live-dot off" style="margin-right:3px"></span>AIS · updated <span id="ts-ships">—</span></div>
+          </div>
+          <div class="tog" id="tog-ships" onclick="toggleEvent('ships')"><div class="tog-k"></div></div>
+        </div>
+
+        <div class="layer-item" data-tip="Active mission aviation hubs. Samaritan's Purse DC-8 tracked live via OpenSky Network ADS-B (free, no key needed) — updates every 10 min when airborne. MAF/JAARS/AIM hubs show static last-known positions with date.">
+          <span class="li-icon" style="color:#f59e0b">✈</span>
+          <div class="li-body">
+            <div class="li-name">Mission Aircraft <span class="li-badge" id="ct-planes">—</span></div>
+            <div class="li-src"><span id="plane-dot" class="live-dot plane off" style="margin-right:3px"></span>OpenSky · updated <span id="ts-planes">—</span><span class="refresh-timer" id="plane-next"></span></div>
+          </div>
+          <div class="tog" id="tog-planes" onclick="toggleEvent('planes')"><div class="tog-k"></div></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ Globe Controls dropdown -->
+  <div class="dd-section">
+    <div class="dd-header" id="ddh-controls" onclick="toggleDD('ddc-controls','ddh-controls')">
+      <span class="p-title-icon">⊕</span>GLOBE CONTROLS
+      <span class="dd-chevron">▼</span>
+    </div>
+    <div class="dd-content" id="ddc-controls">
+      <div class="dd-inner">
+        <div class="vc-lbl">TEXTURE</div>
+        <div class="vc-btns">
+          <button class="vc-btn active" id="tex-tactical" onclick="setTexture('tactical')">TACTICAL</button>
+          <button class="vc-btn" id="tex-daylight" onclick="setTexture('daylight')">DAYLIGHT</button>
+        </div>
+        <div class="vc-row" data-tip="Auto-rotate the globe. Disable to freely pan and explore any region.">ROTATION<div class="tog on" id="tog-rotation" onclick="toggleRotation()"><div class="tog-k"></div></div></div>
+        <div class="vc-row" data-tip="Toggle the atmospheric glow around the globe's edge.">ATMOSPHERE<div class="tog on" id="tog-atmo" onclick="toggleAtmo()"><div class="tog-k"></div></div></div>
+        <div class="vc-row" data-tip="Show latitude and longitude grid lines across the globe surface.">GRATICULES<div class="tog" id="tog-grat" onclick="toggleGrat()"><div class="tog-k"></div></div></div>
+        <div class="vc-row" data-tip="Radial heat blooms showing crisis intensity — colour matches the active intel layer.">HEATMAP BLOOM<div class="tog on" id="tog-heatmap" onclick="toggleHeatmap()"><div class="tog-k"></div></div></div>
+        <div class="vc-row" data-tip="Highlight the 10°–40°N latitude band — home to the majority of the world's unreached peoples and least-evangelised nations."><span class="win1040-label">10/40 WINDOW</span><div class="tog" id="tog-1040" onclick="toggle1040()"><div class="tog-k"></div></div></div>
+        <div class="vc-row" data-tip="Animated arcs showing missionary sending from major countries to unreached fields. Line colour identifies the sending nation."><span class="flows-label">MISSION FLOWS</span><div class="tog" id="tog-arcs" onclick="toggleArcs()"><div class="tog-k"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ Legend dropdown -->
+  <div class="dd-section">
+    <div class="dd-header open" id="ddh-legend" onclick="toggleDD('ddc-legend','ddh-legend')">
+      <span class="p-title-icon">▲</span>LEGEND
+      <span class="dd-chevron">▼</span>
+    </div>
+    <div class="dd-content open" id="ddc-legend">
+      <div class="dd-inner">
+        <div id="legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ Sources dropdown -->
+  <div class="dd-section">
+    <div class="dd-header" id="ddh-sources" onclick="toggleDD('ddc-sources','ddh-sources')">
+      <span class="p-title-icon">◎</span>SOURCES
+      <span class="dd-chevron">▼</span>
+    </div>
+    <div class="dd-content" id="ddc-sources">
+      <div class="dd-inner" style="font-size:7px;color:rgba(0,229,255,0.3);line-height:2">
+        PERSECUTION — Open Doors WWL 2026<br>
+        UNREACHED — Joshua Project 2025<br>
+        BIBLE — Wycliffe / Open Doors 2024<br>
+        INTERNET — Freedom House 2024<br>
+        REFUGEES — UNHCR Global Trends 2024<br>
+        POVERTY — World Bank PovcalNet 2023<br>
+        FAMINE — FEWS NET / IPC 2024–25<br>
+        USCIRF — US Comm. Intl. Relig. Freedom 2025<br>
+        DISASTERS — NASA EONET API<br>
+        WAR — ACLED / UCDP 2024
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="panel" id="right-panel">
+  <div id="right-panel-title">
+    <span>◎</span>PERSECUTION WATCH
+    <span style="margin-left:auto;font-size:8px;opacity:0.5;letter-spacing:0">WWL 2026</span>
+  </div>
+  <div id="persecution-list"></div>
+</div>
+
+<!-- Stats bar -->
+<div id="stats-bar">
+  <div id="stats-header-row">
+    <span id="stats-context-label">GLOBAL OVERVIEW</span>
+    <span id="stats-context-name"></span>
+    <span id="stats-reset-hint">CLICK EMPTY SPACE TO RESET</span>
+    <button id="btn-expand-stats" onclick="toggleExpandStats()">⊞ EXPAND</button>
+  </div>
+  <div id="stats-cards">
+    <div class="sc" id="sc-0" data-stat="0"><span class="sc-flag"></span><div class="sc-val" style="color:#ff1744;text-shadow:0 0 14px rgba(255,23,68,0.5)">388M</div><div class="sc-lbl">PERSECUTED CHRISTIANS</div></div>
+    <div class="sc" id="sc-1" data-stat="1"><span class="sc-flag"></span><div class="sc-val">3.42B</div><div class="sc-lbl">IN UNREACHED PEOPLES</div></div>
+    <div class="sc" id="sc-2" data-stat="2"><span class="sc-flag"></span><div class="sc-val" style="color:#42a5f5;text-shadow:0 0 14px rgba(66,165,245,0.5)">7,188</div><div class="sc-lbl">UNREACHED PEOPLE GROUPS</div></div>
+    <div class="sc" id="sc-3" data-stat="3"><span class="sc-flag"></span><div class="sc-val" style="color:#9c27b0;text-shadow:0 0 14px rgba(156,39,176,0.5)">40.3M</div><div class="sc-lbl">IN MODERN SLAVERY</div></div>
+    <div class="sc" id="sc-4" data-stat="4"><span class="sc-flag"></span><div class="sc-val" style="color:#ff6d00;text-shadow:0 0 14px rgba(255,109,0,0.5)">4,849</div><div class="sc-lbl">DEATHS FOR FAITH 2025</div></div>
+    <div class="sc" id="sc-5" data-stat="5"><span class="sc-flag"></span><div class="sc-val" style="color:#00897b;text-shadow:0 0 14px rgba(0,137,123,0.5)">1,700+</div><div class="sc-lbl">LANGUAGES LACK SCRIPTURE</div></div>
+  </div>
+  <div id="stats-expand-panel"></div>
+</div>
+
+<!-- Stat popup -->
+<div id="stat-popup">
+  <div id="stat-popup-header">
+    <span id="stat-popup-title"></span>
+    <div id="stat-popup-btns">
+      <button id="btn-pin-stat" onclick="togglePinPopup()" title="Pin open">⊕</button>
+      <button id="btn-close-stat" onclick="closeStatPopup()">✕</button>
+    </div>
+  </div>
+  <div id="stat-popup-body"></div>
+</div>
+
+<!-- Hidden stubs so JS country/point-info writes don't throw errors -->
+<div id="country-info" style="display:none"></div>
+<div id="point-info" style="display:none"></div>
+
+<!-- Control tooltip -->
+<div id="ctrl-tip"></div>
+
+<!-- Bottom bar -->
+<div id="bottom-bar">
+  <span id="status-msg">SYSTEM READY</span>
+  <span id="layer-status">OVERLAY: PERSECUTION INDEX</span>
+  <span id="coords">LAT: --.-- // LNG: --.--</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.31.0/dist/globe.gl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// LIVE TRACKING CONFIG
+// aisstream.io  → get a free key at https://aisstream.io (takes ~2 min)
+// OpenSky       → completely free, no key needed
+// ═══════════════════════════════════════════════════════════════
+const LIVE_TRACKING = {
+  AISSTREAM_KEY:       '32518902e06fcd858f4fbbc7d368462121f37e91',
+  AIS_MMSIS:           ['248428000','249269000',   // Africa Mercy, Global Mercy
+                         '255805510','247282900',  // Logos Hope, Geo Barents
+                         '228367700'],             // Ocean Viking
+  DC8_ICAO:            'a84008',                  // N782SP → hex ICAO24
+  EQ_INTERVAL_MS:      5  * 60 * 1000,            // 5 min
+  EONET_INTERVAL_MS:   10 * 60 * 1000,            // 10 min
+  OPENSKY_INTERVAL_MS: 10 * 60 * 1000,            // 10 min
+  AIS_RECONNECT_MS:    30 * 1000,                 // 30 s reconnect on drop
+};
+// Interval + WebSocket handles
+let _eqInterval = null, _disInterval = null, _openSkyInterval = null;
+let _aisWS = null, _aisReconnectTimer = null;
+// Countdown timers
+let _eqCountdown = 0, _disCountdown = 0, _planeCountdown = 0;
+let _eqCountTimer = null, _disCountTimer = null, _planeCountTimer = null;
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — Open Doors World Watch List 2026
+// ═══════════════════════════════════════════════════════════════
+const WWL = [
+  {i:'PRK',n:'North Korea',r:1,s:98,lv:'Extreme',p:400000,note:'Christians face death, imprisonment, or forced labor if discovered. No church allowed to exist openly.'},
+  {i:'SOM',n:'Somalia',r:2,s:96,lv:'Extreme',p:5000,note:'Converting from Islam is illegal and punishable by death. Almost no known Christians remain.'},
+  {i:'YEM',n:'Yemen',r:3,s:95,lv:'Extreme',p:2200000,note:'Civil war creates extreme danger for the tiny Christian minority. No church buildings exist.'},
+  {i:'SDN',n:'Sudan',r:4,s:94,lv:'Extreme',p:2000000,note:'Ongoing conflict has intensified persecution of Christians in Darfur and Kordofan regions.'},
+  {i:'ERI',n:'Eritrea',r:5,s:93,lv:'Extreme',p:2500000,note:'Government imprisons Christians in metal shipping containers without trial for years.'},
+  {i:'SYR',n:'Syria',r:6,s:90,lv:'Extreme',p:600000,note:'Jihadist resurgence brought near-maximum persecution score. Christian population collapsing.'},
+  {i:'NGA',n:'Nigeria',r:7,s:89,lv:'Extreme',p:35000000,note:'Boko Haram and Fulani militants systematically attack Christian villages, churches, and pastors.'},
+  {i:'PAK',n:'Pakistan',r:8,s:88,lv:'Extreme',p:4000000,note:'Blasphemy laws weaponized to imprison and execute Christians with near-total impunity.'},
+  {i:'LBY',n:'Libya',r:9,s:87,lv:'Extreme',p:40000,note:'Christians face imprisonment and execution in extremist-controlled territory in the south.'},
+  {i:'IRN',n:'Iran',r:10,s:86,lv:'Extreme',p:800000,note:'House church leaders face imprisonment, torture, and lengthy prison sentences regularly.'},
+  {i:'AFG',n:'Afghanistan',r:11,s:85,lv:'Extreme',p:10000,note:'Taliban rule makes any open Christian faith punishable by execution or mob violence.'},
+  {i:'IND',n:'India',r:12,s:84,lv:'Extreme',p:71000000,note:'Hindu nationalist violence against Christians and churches has reached record levels.'},
+  {i:'SAU',n:'Saudi Arabia',r:13,s:83,lv:'Extreme',p:1500000,note:'No churches permitted for nationals. Conversion from Islam is illegal and dangerous.'},
+  {i:'MMR',n:'Myanmar',r:14,s:82,lv:'Extreme',p:3700000,note:'Military junta bombs and burns ethnic Christian Kachin and Karen villages with impunity.'},
+  {i:'MLI',n:'Mali',r:15,s:81,lv:'Extreme',p:400000,note:'Jihadist groups control large territories, systematically killing Christian leaders.'},
+  {i:'BFA',n:'Burkina Faso',r:16,s:80,lv:'Extreme',p:3000000,note:'Jihadist insurgency expanding rapidly, targeting churches, pastors and Christian communities.'},
+  {i:'CHN',n:'China',r:17,s:79,lv:'Very High',p:96000000,note:'Mass church closures, arrests of pastors, and AI facial recognition surveillance of Christians.'},
+  {i:'IRQ',n:'Iraq',r:18,s:78,lv:'Very High',p:200000,note:'Christian population has shrunk by 80% since 2003 due to violence and mass emigration.'},
+  {i:'ETH',n:'Ethiopia',r:19,s:77,lv:'Very High',p:50000000,note:'Ongoing civil conflict puts both Orthodox and Protestant Christians at risk across regions.'},
+  {i:'LAO',n:'Laos',r:20,s:76,lv:'Very High',p:800000,note:'Communist government controls all religious activity and persecutes unregistered house churches.'},
+  {i:'BGD',n:'Bangladesh',r:21,s:75,lv:'Very High',p:900000,note:'Islamist extremists target Christian leaders, and Muslim-background converts face family violence.'},
+  {i:'EGY',n:'Egypt',r:22,s:74,lv:'Very High',p:10000000,note:'Coptic Christians face church attacks, discrimination in employment, and targeted violence.'},
+  {i:'DZA',n:'Algeria',r:23,s:73,lv:'Very High',p:50000,note:'Protestant church closures and imprisonment of Christian leaders accelerating since 2017.'},
+  {i:'MOZ',n:'Mozambique',r:24,s:72,lv:'Very High',p:6000000,note:'Jihadist insurgency in northern Mozambique specifically targets Christian communities.'},
+  {i:'MAR',n:'Morocco',r:25,s:71,lv:'Very High',p:30000,note:'Converts from Islam face family persecution, intense social pressure, and legal risk.'},
+  {i:'MDV',n:'Maldives',r:26,s:70,lv:'Very High',p:1500,note:'Citizenship legally requires being Muslim. Christians face deportation and loss of citizenship.'},
+  {i:'TUN',n:'Tunisia',r:27,s:69,lv:'Very High',p:2000,note:'Converts from Islam face intense family rejection, social ostracism, and legal complications.'},
+  {i:'UZB',n:'Uzbekistan',r:28,s:68,lv:'Very High',p:250000,note:'Government restricts, monitors, and raids all religious activity outside strict state control.'},
+  {i:'VNM',n:'Vietnam',r:29,s:67,lv:'Very High',p:8000000,note:'Ethnic minority Christians (Hmong, Montagnard) face the most severe targeted persecution.'},
+  {i:'COL',n:'Colombia',r:30,s:66,lv:'Very High',p:40000000,note:'FARC dissidents and drug cartels threaten and assassinate pastors and church leaders.'},
+  {i:'CAF',n:'Central African Rep.',r:31,s:65,lv:'Very High',p:2500000,note:'Armed groups specifically target and kill Christian leaders across the country.'},
+  {i:'AZE',n:'Azerbaijan',r:32,s:64,lv:'Very High',p:450000,note:'Government restricts religious activity, denies church registration, and monitors believers.'},
+  {i:'COD',n:'DR Congo',r:33,s:63,lv:'High',p:60000000,note:'Armed groups in eastern DRC routinely raid, kill, and abduct from Christian communities.'},
+  {i:'KAZ',n:'Kazakhstan',r:34,s:62,lv:'High',p:4000000,note:'Restrictions on religious meetings and confiscation of Christian literature continues.'},
+  {i:'NER',n:'Niger',r:35,s:61,lv:'High',p:800000,note:'Jihadist violence spilling over from Mali and Burkina Faso increasingly threatens Christians.'},
+  {i:'CUB',n:'Cuba',r:36,s:60,lv:'High',p:6000000,note:'Communist government restricts, monitors, and harasses church activity especially house churches.'},
+  {i:'IDN',n:'Indonesia',r:37,s:59,lv:'High',p:20000000,note:'Islamist groups attack churches in Sulawesi and Papua, and block church construction.'},
+  {i:'TJK',n:'Tajikistan',r:38,s:58,lv:'High',p:200000,note:'Government bans most church activity and religious literature outside strict state control.'},
+  {i:'JOR',n:'Jordan',r:39,s:57,lv:'High',p:200000,note:'Converts from Islam face legal complications, family pressure, and risk of honour violence.'},
+  {i:'QAT',n:'Qatar',r:40,s:56,lv:'High',p:600000,note:'Conversion from Islam is criminalized. No churches allowed for Qatari nationals.'},
+  {i:'MEX',n:'Mexico',r:41,s:55,lv:'High',p:30000000,note:'Indigenous communities and pastors are targeted by cartels and traditional local authorities.'},
+  {i:'KWT',n:'Kuwait',r:42,s:54,lv:'High',p:450000,note:'No churches for nationals. Converts face serious legal complications and family violence.'},
+  {i:'ARE',n:'UAE',r:43,s:53,lv:'High',p:1000000,note:'Conversion from Islam is criminalized. Expatriate Christians face strict restrictions.'},
+  {i:'BTN',n:'Bhutan',r:44,s:52,lv:'High',p:20000,note:'Buddhist nationalism drives significant discrimination and intense family pressure on converts.'},
+  {i:'CMR',n:'Cameroon',r:45,s:51,lv:'High',p:8000000,note:'Boko Haram violence in the north plus the Anglophone conflict endangers Christians.'},
+  {i:'MYS',n:'Malaysia',r:46,s:50,lv:'High',p:3000000,note:'Converts from Islam face legal proceedings, loss of civil rights, and social persecution.'},
+  {i:'TUR',n:'Turkey',r:47,s:49,lv:'High',p:200000,note:'Nationalist attacks on Christians increasing. Church leaders face harassment and legal action.'},
+  {i:'COM',n:'Comoros',r:48,s:48,lv:'High',p:2000,note:'Islam is the state religion. Christians face severe social pressure and legal risk.'},
+  {i:'KEN',n:'Kenya',r:49,s:47,lv:'High',p:25000000,note:'Al-Shabaab targets Christians in border regions and carries out attacks in Nairobi.'},
+  {i:'RUS',n:'Russia',r:50,s:46,lv:'High',p:71000000,note:"Government bans minority Christian groups. Jehovah's Witnesses and others imprisoned."},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — Joshua Project 2025
+// ═══════════════════════════════════════════════════════════════
+const JP = [
+  {i:'AFG',n:'Afghanistan',u:99.9,g:26,p:43000000},{i:'DZA',n:'Algeria',u:99.5,g:21,p:47000000},
+  {i:'BGD',n:'Bangladesh',u:99.2,g:47,p:169000000},{i:'BTN',n:'Bhutan',u:98.0,g:9,p:800000},
+  {i:'BRN',n:'Brunei',u:67.0,g:10,p:290000},{i:'KHM',n:'Cambodia',u:95.0,g:41,p:16000000},
+  {i:'CHN',n:'China',u:93.0,g:444,p:1310000000},{i:'COM',n:'Comoros',u:99.5,g:5,p:900000},
+  {i:'DJI',n:'Djibouti',u:99.7,g:8,p:990000},{i:'EGY',n:'Egypt',u:89.0,g:24,p:100000000},
+  {i:'IND',n:'India',u:95.0,g:2379,p:1350000000},{i:'IDN',n:'Indonesia',u:89.0,g:199,p:246000000},
+  {i:'IRN',n:'Iran',u:99.4,g:81,p:88000000},{i:'IRQ',n:'Iraq',u:97.0,g:38,p:43000000},
+  {i:'JPN',n:'Japan',u:98.5,g:21,p:125000000},{i:'JOR',n:'Jordan',u:97.5,g:29,p:10500000},
+  {i:'KAZ',n:'Kazakhstan',u:94.0,g:37,p:19500000},{i:'KWT',n:'Kuwait',u:93.0,g:12,p:4000000},
+  {i:'KGZ',n:'Kyrgyzstan',u:97.5,g:20,p:6800000},{i:'LAO',n:'Laos',u:91.0,g:67,p:7500000},
+  {i:'LBY',n:'Libya',u:99.7,g:13,p:7200000},{i:'MYS',n:'Malaysia',u:61.0,g:104,p:20000000},
+  {i:'MDV',n:'Maldives',u:99.9,g:4,p:500000},{i:'MLI',n:'Mali',u:97.0,g:28,p:22000000},
+  {i:'MRT',n:'Mauritania',u:99.9,g:4,p:4700000},{i:'MAR',n:'Morocco',u:99.7,g:16,p:37000000},
+  {i:'MMR',n:'Myanmar',u:91.0,g:141,p:49000000},{i:'MNG',n:'Mongolia',u:98.0,g:20,p:3400000},
+  {i:'NPL',n:'Nepal',u:97.0,g:116,p:30000000},{i:'NER',n:'Niger',u:99.5,g:15,p:27000000},
+  {i:'PRK',n:'North Korea',u:98.5,g:4,p:26000000},{i:'OMN',n:'Oman',u:97.0,g:20,p:4700000},
+  {i:'PAK',n:'Pakistan',u:96.0,g:148,p:240000000},{i:'QAT',n:'Qatar',u:95.0,g:19,p:2900000},
+  {i:'SAU',n:'Saudi Arabia',u:99.1,g:44,p:36000000},{i:'SEN',n:'Senegal',u:94.0,g:29,p:17000000},
+  {i:'SOM',n:'Somalia',u:99.9,g:5,p:18000000},{i:'SDN',n:'Sudan',u:71.0,g:63,p:36000000},
+  {i:'SYR',n:'Syria',u:96.0,g:26,p:21000000},{i:'TJK',n:'Tajikistan',u:99.8,g:13,p:10300000},
+  {i:'THA',n:'Thailand',u:97.0,g:119,p:71000000},{i:'TKM',n:'Turkmenistan',u:99.9,g:10,p:6100000},
+  {i:'TUN',n:'Tunisia',u:99.5,g:10,p:12000000},{i:'TUR',n:'Turkey',u:99.3,g:37,p:85000000},
+  {i:'ARE',n:'UAE',u:93.5,g:40,p:9500000},{i:'UZB',n:'Uzbekistan',u:99.8,g:27,p:36000000},
+  {i:'VNM',n:'Vietnam',u:88.0,g:70,p:96000000},{i:'YEM',n:'Yemen',u:99.9,g:26,p:35000000},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — Sex Trafficking (GSI 2023 + TIP 2024)
+// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// DATA — Bible Shortage (Wycliffe 2024 + Open Doors)
+// ═══════════════════════════════════════════════════════════════
+const BIBLE = [
+  {i:'PRK',n:'North Korea',score:5,note:'Possessing a Bible is a capital offense. Total ban enforced by secret police.'},
+  {i:'AFG',n:'Afghanistan',score:5,note:'Bible ownership punishable by death under Taliban. All Scripture confiscated.'},
+  {i:'SOM',n:'Somalia',score:5,note:'No Bible distribution permitted. Christians risk death if found with Scripture.'},
+  {i:'MDV',n:'Maldives',score:5,note:'Import of non-Islamic religious material is illegal. No public Scripture available.'},
+  {i:'MRT',n:'Mauritania',score:5,note:'Bible distribution to Muslims is illegal. Near-zero access for native speakers.'},
+  {i:'TKM',n:'Turkmenistan',score:4,note:'Bibles regularly confiscated. Only limited Russian language Scripture tolerated.'},
+  {i:'UZB',n:'Uzbekistan',score:4,note:'Only state-approved quantities allowed. Distribution raids by security services.'},
+  {i:'TJK',n:'Tajikistan',score:4,note:'Severe restrictions on religious literature. Bibles confiscated and believers fined.'},
+  {i:'IRN',n:'Iran',score:4,note:'Bible printing banned. House church Scriptures confiscated during raids.'},
+  {i:'SAU',n:'Saudi Arabia',score:4,note:'Import of non-Islamic religious material illegal. Bibles confiscated at customs.'},
+  {i:'CHN',n:'China',score:3,note:'Online Bible sales banned since 2018. Print limited to state-registered churches.'},
+  {i:'VNM',n:'Vietnam',score:3,note:'Bible printing limited. Ethnic minority language Scriptures severely restricted.'},
+  {i:'LAO',n:'Laos',score:3,note:'Distribution outside registered churches restricted. Ethnic languages lacking.'},
+  {i:'CUB',n:'Cuba',score:3,note:'Import restrictions limit supply. House church Scriptures frequently confiscated.'},
+  {i:'ERI',n:'Eritrea',score:3,note:'Only 4 denominations registered. All others subject to confiscation.'},
+  {i:'PAK',n:'Pakistan',score:2,note:'Scripture available but blasphemy laws create climate of fear for distribution.'},
+  {i:'NGA',n:'Nigeria',score:2,note:'Available in south; Boko Haram destroys churches and Scriptures in north.'},
+  {i:'ETH',n:'Ethiopia',score:2,note:'Language gaps. Distribution disrupted by ongoing civil conflict.'},
+  {i:'IND',n:'India',score:2,note:'Distribution harassment by Hindu nationalist groups. Tribal language gaps.'},
+  {i:'MMR',n:'Myanmar',score:2,note:'Ethnic minority language gaps. Bibles destroyed in military attacks on villages.'},
+  {i:'SDN',n:'Sudan',score:2,note:'Church destruction and Scripture burning by RSF forces in conflict zones.'},
+  {i:'SYR',n:'Syria',score:2,note:'Bible Society offices bombed. Pre-war infrastructure destroyed.'},
+  {i:'CAF',n:'Central African Rep.',score:2,note:'Church infrastructure destroyed. Remote populations have no access.'},
+  {i:'COD',n:'DR Congo',score:2,note:'Many languages lack translation. Conflict disrupts distribution.'},
+  {i:'BGD',n:'Bangladesh',score:2,note:'Islamist pressure prevents distribution. Language gaps exist.'},
+  {i:'MLI',n:'Mali',score:2,note:'Jihadists burning churches and Scriptures. Language gaps in north.'},
+  {i:'BFA',n:'Burkina Faso',score:2,note:'Jihadist attacks destroying churches. Northern regions have no Scripture access.'},
+  {i:'PNG',n:'Papua New Guinea',score:1,note:'800+ languages; only ~300 have any Scripture. Wycliffe active but gaps remain.'},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — Internet Blackout (Freedom House FOTN 2024)
+// ═══════════════════════════════════════════════════════════════
+const INTERNET = [
+  {i:'PRK',n:'North Korea',score:97,status:'NOT FREE',note:'Near-zero civilian internet. Death penalty for outside access.'},
+  {i:'TKM',n:'Turkmenistan',score:92,status:'NOT FREE',note:'Almost entirely blocked. VPN use illegal. State telecom monopoly.'},
+  {i:'CHN',n:'China',score:88,status:'NOT FREE',note:'Great Firewall blocks all major Western platforms. Mass surveillance.'},
+  {i:'IRN',n:'Iran',score:83,status:'NOT FREE',note:'Near-total shutdown during protests. VPNs blocked. Instagram/WhatsApp banned.'},
+  {i:'MMR',n:'Myanmar',score:80,status:'NOT FREE',note:'Township-level blackouts. Military controls Mytel surveillance network.'},
+  {i:'RUS',n:'Russia',score:77,status:'NOT FREE',note:'Mass blocking since Ukraine war. VPN providers ordered to comply.'},
+  {i:'CUB',n:'Cuba',score:74,status:'NOT FREE',note:'Social media blocked during protests. Mobile data cuts as repression tool.'},
+  {i:'TJK',n:'Tajikistan',score:72,status:'NOT FREE',note:'Messenger apps blocked. Opposition websites inaccessible. Pervasive surveillance.'},
+  {i:'SYR',n:'Syria',score:70,status:'NOT FREE',note:'Government controls all infrastructure. Journalists killed.'},
+  {i:'UZB',n:'Uzbekistan',score:68,status:'NOT FREE',note:'Significant blocking and monitoring. Dissidents surveilled and prosecuted.'},
+  {i:'ETH',n:'Ethiopia',score:65,status:'NOT FREE',note:'Major regional blackouts in Tigray/Amhara lasting months.'},
+  {i:'SDN',n:'Sudan',score:63,status:'NOT FREE',note:'Internet cut during RSF-SAF war. Social media repeatedly blocked.'},
+  {i:'PAK',n:'Pakistan',score:60,status:'PARTLY FREE',note:'X (Twitter) blocked for months. YouTube restricted. Mass surveillance.'},
+  {i:'BGD',n:'Bangladesh',score:58,status:'PARTLY FREE',note:'Facebook and WhatsApp cut during political unrest in 2024.'},
+  {i:'AZE',n:'Azerbaijan',score:56,status:'NOT FREE',note:'Independent news sites blocked. Dissidents arrested for online posts.'},
+  {i:'KAZ',n:'Kazakhstan',score:54,status:'PARTLY FREE',note:'Internet cut during 2022 uprising. Ongoing monitoring of social media.'},
+  {i:'SAU',n:'Saudi Arabia',score:53,status:'NOT FREE',note:'VoIP apps blocked. Dissidents arrested for tweets.'},
+  {i:'IND',n:'India',score:50,status:'PARTLY FREE',note:'Most internet shutdowns of any country. Kashmir blacked out 552+ days.'},
+  {i:'NGA',n:'Nigeria',score:49,status:'PARTLY FREE',note:'Twitter banned for 7 months in 2021. Fake news laws used to arrest bloggers.'},
+  {i:'VNM',n:'Vietnam',score:78,status:'NOT FREE',note:'Cybersecurity law forces content removal. Bloggers imprisoned.'},
+  {i:'IRQ',n:'Iraq',score:55,status:'PARTLY FREE',note:'Social media blocked during exam season and political unrest.'},
+  {i:'IRQ',n:'Iraq',score:55,status:'PARTLY FREE',note:'Social media platforms blocked during exam season and political unrest.'},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — War Zones (ACLED / UCDP 2024)
+// ═══════════════════════════════════════════════════════════════
+const WAR_ZONES = [
+  {lat:48.5,lng:32.0,iso:'UKR',name:'Ukraine–Russia War',since:2022,deaths:'500,000+',note:'Largest conventional war in Europe since WWII. 8M+ internally displaced.'},
+  {lat:31.5,lng:34.8,iso:'PSE',name:'Gaza War',since:2023,deaths:'45,000+',note:'Israeli ground offensive following Hamas Oct 7 attack. Gaza infrastructure destroyed.'},
+  {lat:15.5,lng:30.5,iso:'SDN',name:'Sudan Civil War',since:2023,deaths:'150,000+',note:"SAF vs RSF conflict. 8M+ displaced — world's largest displacement crisis."},
+  {lat:14.5,lng:40.5,iso:'ETH',name:'Ethiopia Conflict',since:2020,deaths:'600,000+',note:'Tigray war + Amhara/Oromia insurgencies. Deadliest conflict of the 2020s.'},
+  {lat:16.0,lng:47.5,iso:'YEM',name:'Yemen Civil War',since:2015,deaths:'377,000+',note:'Houthi vs Saudi-led coalition. Worst humanitarian crisis on earth 2015–2023.'},
+  {lat:14.0,lng:2.0,iso:'MLI',name:'Sahel Jihadist War',since:2012,deaths:'40,000+',note:'JNIM & ISGS control vast territory. Mali, Burkina Faso, Niger all destabilized.'},
+  {lat:33.5,lng:43.5,iso:'IRQ',name:'Iraq Insurgency',since:2003,deaths:'200,000+',note:'ISIS resurgence in Anbar. Ongoing instability despite 2017 territorial defeat.'},
+  {lat:35.0,lng:38.5,iso:'SYR',name:'Syrian Civil War',since:2011,deaths:'500,000+',note:'HTS controls northwest. 6.5M refugees externally displaced.'},
+  {lat:6.5,lng:21.0,iso:'CAF',name:'CAR Civil War',since:2012,deaths:'50,000+',note:'Wagner/FACA vs CPC coalition. Christians targeted by armed groups.'},
+  {lat:5.5,lng:26.5,iso:'COD',name:'Eastern DRC Conflict',since:1996,deaths:'6,000,000+',note:'M23/Rwanda proxy vs FARDC. Deadliest conflict since WWII.'},
+  {lat:6.0,lng:10.5,iso:'NGA',name:'Nigeria – Boko Haram',since:2009,deaths:'350,000+',note:'Northeast insurgency + farmer-herder violence. Christians primary target.'},
+  {lat:33.0,lng:69.5,iso:'AFG',name:'Taliban Consolidation',since:2021,deaths:'180,000+',note:'Taliban govern through fear. Christians in extreme danger.'},
+  {lat:22.0,lng:85.5,iso:'MMR',name:'Myanmar Civil War',since:2021,deaths:'50,000+',note:'PDFs and ethnic armies vs military junta. Air bombing of civilian villages.'},
+  {lat:32.5,lng:35.5,iso:'LBN',name:'Lebanon – South',since:2024,deaths:'4,000+',note:'Post-Hezbollah conflict buffer zone. Israeli air patrols.'},
+  {lat:-17.5,lng:40.0,iso:'MOZ',name:'Mozambique Insurgency',since:2017,deaths:'5,000+',note:'ISGS affiliate attacks Cabo Delgado. Christians targeted.'},
+  {lat:13.5,lng:2.5,iso:'NER',name:'Niger–Jihadist Conflict',since:2015,deaths:'12,000+',note:'Post-coup government faces jihadist expansion from Mali border.'},
+  {lat:40.0,lng:45.5,iso:'ARM',name:'Armenia–Azerbaijan',since:2020,deaths:'7,000+',note:'Azerbaijan took full control of Nagorno-Karabakh in 2023.'},
+  {lat:32.5,lng:44.0,iso:'IRN',name:'Iran Proxy Network',since:2019,deaths:'Variable',note:'IRGC proxies: Hamas, Hezbollah, Houthis, PMF. Regional destabilization.'},
+  {lat:15.0,lng:75.5,iso:'IND',name:'India – Maoist Insurgency',since:1967,deaths:'15,000+',note:'Naxalite guerrillas in "Red Corridor." Government offensive accelerating.'},
+];
+
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — Mission & Humanitarian Ships
+// color: marker glow color per organization
+// ═══════════════════════════════════════════════════════════════
+const MISSION_SHIPS = [
+  // ── Mercy Ships ──────────────────────────────────────────────
+  {
+    imo:'7803188', mmsi:'248428000', lat:-33.93, lng:18.42,
+    name:'Africa Mercy', org:'Mercy Ships',
+    port:'Cape Town, South Africa',
+    note:'16,572 GT. Converted rail ferry serving West Africa since 2007. Currently in Cape Town for crew rest & reprovisioning before next field service.',
+    capacity:'450 beds', surgeries:'~4,000/yr',
+    status:'In Port — Cape Town', color:'#00e5ff',
+    nextPort:'Dakar, Senegal (est. Apr 2025)',
+    schedule:'Cape Town refit through Mar 2025 · Field service in Senegal begins Apr 2025',
+    routes:'West Africa rotation: Senegal → Guinea → Sierra Leone → Togo (annual cycle)',
+    trackingNote:'AIS tracked · updates when underway · infrequent in port'
+  },
+  {
+    imo:'9726499', mmsi:'249269000', lat:8.49, lng:-13.23,
+    name:'Global Mercy', org:'Mercy Ships',
+    port:'Freetown, Sierra Leone',
+    note:"World's largest purpose-built civilian hospital ship. 37,000 GT · 641 beds · 6 operating theatres. 2025 West Africa field service in Freetown.",
+    capacity:'641 beds', surgeries:'~5,000/yr',
+    status:'Field Service — Freetown', color:'#00e5ff',
+    nextPort:'Conakry, Guinea (est. mid-2025)',
+    schedule:'Freetown field service Jan–May 2025 · Guinea deployment follows',
+    routes:'West Africa: Sierra Leone → Guinea → Senegal (annual rotation)',
+    trackingNote:'AIS tracked · stationary during field service · rare position updates'
+  },
+  // ── OM Ships International ───────────────────────────────────
+  {
+    imo:'7358573', mmsi:'255805510', lat:14.09, lng:100.64,
+    name:'Logos Hope', org:'OM Ships International',
+    port:'Southeast Asia (2025 tour)',
+    note:"World's largest floating bookshop. Christian literature, outreach & training. ~180 countries visited since 1970. Operated by Operation Mobilisation.",
+    capacity:'~400 crew & volunteers', surgeries:'N/A',
+    status:'Active — SE Asia Tour', color:'#a78bfa',
+    nextPort:'Manila, Philippines (est. Q3 2025)',
+    schedule:'2025 SE Asia tour: Thailand (Jan–Mar) → Myanmar (Apr) → Philippines (Jun–Aug) → Vietnam (Q4)',
+    routes:'Annual global tour: SE Asia · Pacific Islands · Africa · Latin America circuit',
+    trackingNote:'AIS tracked · position updates every few hours while in transit'
+  },
+  {
+    imo:'9723382', mmsi:'255806080', lat:1.29, lng:103.85,
+    name:'Doulos Hope', org:'OM Ships International',
+    port:'Singapore / Southeast Asia',
+    note:'Second OM Ships vessel, launched 2022. Floating bookshop and community outreach platform. Focuses on Southeast Asia and Pacific island nations.',
+    capacity:'~300 crew & volunteers', surgeries:'N/A',
+    status:'Active — SE Asia', color:'#a78bfa',
+    nextPort:'Kuala Lumpur, Malaysia (est. Q2 2025)',
+    schedule:'Singapore port call Mar 2025 · Malaysia deployment Q2 2025 · Indonesia Q3',
+    routes:'SE Asia & Pacific island nations circuit (Indonesia, Malaysia, Philippines, Pacific)',
+    trackingNote:'AIS tracked · updates when underway between port calls'
+  },
+  // ── Mediterranean Rescue ─────────────────────────────────────
+  {
+    imo:'9211430', mmsi:'247282900', lat:35.9, lng:14.5,
+    name:'Geo Barents', org:'MSF (Médecins Sans Frontières)',
+    port:'Central Mediterranean (SAR)',
+    note:'MSF search and rescue vessel operating Central Mediterranean. Rescues migrants and refugees fleeing Libya coast. Medical care aboard. Directly tied to Mediterranean refugee crisis.',
+    capacity:'350+ rescued per mission', surgeries:'Medical aboard',
+    status:'Active — Central Mediterranean', color:'#f97316',
+    nextPort:'Palermo or Catania, Sicily (disembarkation port — rotates)',
+    schedule:'Continuous active SAR operations year-round · no fixed schedule',
+    routes:'SAR corridor: Libya/Tunisia coast ↔ Sicily/Lampedusa (Italy) — Central Mediterranean',
+    trackingNote:'AIS tracked · frequent position updates during active SAR · may go dark per EU rules'
+  },
+  {
+    imo:'9491643', mmsi:'228367700', lat:35.5, lng:13.0,
+    name:'Ocean Viking', org:'SOS Méditerranée',
+    port:'Central Mediterranean (SAR)',
+    note:'SOS Méditerranée search and rescue ship. Central Mediterranean SAR corridor. Has rescued 40,000+ people since 2016. Critical link in the refugee crisis response.',
+    capacity:'200+ rescued per op', surgeries:'N/A',
+    status:'Active — Mediterranean SAR', color:'#f97316',
+    nextPort:'Marseille, France (home port) or Italian disembarkation',
+    schedule:'Continuous active SAR · 4–6 week patrol missions · rotates through French ports',
+    routes:'SAR corridor: Tunisia/Libya coast ↔ Lampedusa/Sicily — Central Mediterranean',
+    trackingNote:'AIS tracked · updates continuously when on SAR patrol'
+  },
+  // ── WFP / UN Humanitarian ────────────────────────────────────
+  {
+    imo:'9337014', mmsi:'538006641', lat:11.6, lng:43.15,
+    name:'WFP MV Gradina', org:'UN World Food Programme',
+    port:'Djibouti / Horn of Africa',
+    note:'WFP vessel supplying Yemen and Horn of Africa food corridors. Part of UNHAS maritime logistics reaching inaccessible crisis zones where road access is blocked by conflict.',
+    capacity:'Bulk food cargo', surgeries:'N/A',
+    status:'Active — Yemen/Horn of Africa', color:'#fbbf24',
+    nextPort:'Hudaydah, Yemen (weekly rotations)',
+    schedule:'Weekly food delivery rotations · Djibouti → Yemen → Horn of Africa cycle',
+    routes:'Djibouti ↔ Hudaydah (Yemen) ↔ Berbera (Somalia) — food aid corridor',
+    trackingNote:'AIS tracked · MMSI outside monitored list · position shown is static estimate'
+  },
+  // ── US Navy Hospital Ships ───────────────────────────────────
+  {
+    imo:'8023737', mmsi:'338232000', lat:36.85, lng:-76.29,
+    name:'USNS Comfort', org:'US Navy (Humanitarian)',
+    port:'Norfolk, VA (homeport)',
+    note:'US Navy hospital ship. Deploys for major disasters — Haiti 2010, Venezuela 2018, COVID 2020. 1,000 beds when activated. Staffed by Navy + civilian medical volunteers.',
+    capacity:'1,000 beds (activated)', surgeries:'~500 per deployment',
+    status:'Standby — Norfolk, VA', color:'#94a3b8',
+    nextPort:'Caribbean / Latin America (next humanitarian deployment TBD)',
+    schedule:'On standby at Norfolk · typically 1 major deployment/year · next mission TBD 2025',
+    routes:'Latin America & Caribbean: historically Haiti · Colombia · Ecuador · Peru · Guatemala',
+    trackingNote:'AIS tracked but rarely transmits while in homeport — static position shown'
+  },
+  {
+    imo:'8023749', mmsi:'338233000', lat:32.68, lng:-117.14,
+    name:'USNS Mercy', org:'US Navy (Humanitarian)',
+    port:'San Diego, CA (homeport)',
+    note:'US Navy Pacific hospital ship. Pacific Partnership humanitarian deployments across Southeast Asia and Pacific Islands. 1,000 beds when activated.',
+    capacity:'1,000 beds (activated)', surgeries:'~500 per deployment',
+    status:'Standby — San Diego, CA', color:'#94a3b8',
+    nextPort:'Indo-Pacific deployment (Pacific Partnership 2025 — dates TBD)',
+    schedule:'On standby at San Diego · Pacific Partnership annual mission typically May–Sep',
+    routes:'Indo-Pacific: Philippines · Vietnam · Timor-Leste · Cambodia · Pacific Islands',
+    trackingNote:'AIS tracked but rarely transmits while in homeport — static position shown'
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — Mission Aviation (active:true = currently deployed/operating)
+// ═══════════════════════════════════════════════════════════════
+const MISSION_PLANES = [
+  // ── Samaritan's Purse ────────────────────────────────────────
+  {
+    reg:'N782SP', lat:14.5, lng:39.5,
+    name:"SP DC-8 Flying Hospital", org:"Samaritan's Purse",
+    base:'Greensboro, NC (homebase)',
+    note:"McDonnell Douglas DC-8 flying surgical hospital. Deploys to disasters, conflict zones, and remote areas. 2025 active in East Africa crisis response. Founded by Franklin Graham.",
+    type:'DC-8 Hospital Aircraft', status:'Active Deployment — East Africa',
+    active:true, color:'#f59e0b',
+    serviceArea:'Global crisis response — Africa, Middle East, Latin America, Asia',
+    schedule:'2025: East Africa deployment (Eritrea/Ethiopia region). Typical: 2–3 major missions/year · 4–8 wks each',
+    routes:'Greensboro, NC → deployment zone (varies) → return · last known: East Africa corridor',
+    trackingNote:'ADS-B tracked via OpenSky · ICAO a84008 · only visible when airborne'
+  },
+  // ── Mission Aviation Fellowship ──────────────────────────────
+  {
+    reg:'MAF-DRC', lat:-4.32, lng:15.32,
+    name:'MAF DR Congo Hub', org:'Mission Aviation Fellowship',
+    base:'Kinshasa (N\'djili Airport), DRC',
+    note:'MAF DRC — ~20 Cessna Caravans serving jungle communities unreachable by road. Carries missionaries, medical teams, Bibles, and humanitarian supplies to 10/40 Window peoples.',
+    type:'Cessna Caravan fleet (~20 aircraft)', status:'Active — DRC Operations',
+    active:true, color:'#f59e0b',
+    serviceArea:'DR Congo — Congo Basin jungle, Kasai, Kivu, Bandundu, Équateur provinces',
+    schedule:'Daily operations year-round · 500–700 flights/month · medical evacuations on demand',
+    routes:'Kinshasa hub → Bandundu · Lodja · Bunia · Goma · Gemena · 100+ remote strips',
+    trackingNote:'Hub position only — individual aircraft not tracked here · no ADS-B available'
+  },
+  {
+    reg:'MAF-SSD', lat:4.85, lng:31.57,
+    name:'MAF South Sudan Hub', org:'Mission Aviation Fellowship',
+    base:'Juba, South Sudan',
+    note:'MAF South Sudan — critical lifeline for missionaries and aid workers amid ongoing conflict. Connects isolated church communities and medical teams to the outside world.',
+    type:'Cessna Caravan fleet (~12 aircraft)', status:'Active — South Sudan',
+    active:true, color:'#f59e0b',
+    serviceArea:'South Sudan — conflict zones, remote villages, aid corridors',
+    schedule:'Daily operations year-round · 300+ flights/month · emergency evacuations as needed',
+    routes:'Juba hub → Malakal · Wau · Yei · Torit · Pochalla · Rumbek · remote village strips',
+    trackingNote:'Hub position only — individual aircraft not tracked here · no ADS-B available'
+  },
+  {
+    reg:'MAF-PNG', lat:-9.44, lng:147.21,
+    name:'MAF Papua New Guinea Hub', org:'Mission Aviation Fellowship',
+    base:'Port Moresby (Jacksons Airport), PNG',
+    note:"MAF PNG — world's most active MAF program. Serves ~600 remote airstrips. PNG has 800+ languages, most unreached. Critical for Wycliffe Bible translation teams and remote church planting.",
+    type:'Cessna Caravan fleet (~30 aircraft)', status:'Active — Papua New Guinea',
+    active:true, color:'#f59e0b',
+    serviceArea:'Papua New Guinea — 600+ remote airstrips, Highland, coastal, and island communities',
+    schedule:'Daily operations year-round · largest MAF program globally · ~1,000 flights/month',
+    routes:'Port Moresby hub → Mt. Hagen · Goroka · Wewak · Madang · highland strips · island communities',
+    trackingNote:'Hub position only — individual aircraft not tracked here · no ADS-B available'
+  },
+  {
+    reg:'MAF-IDN', lat:-2.51, lng:140.52,
+    name:'MAF Indonesia Hub', org:'Mission Aviation Fellowship',
+    base:'Sentani Airport, West Papua, Indonesia',
+    note:'MAF Indonesia — serving remote West Papua and Kalimantan communities. Key for reaching unreached Papuan tribal groups and supporting Wycliffe/SIL translation work in interior jungles.',
+    type:'Cessna Caravan fleet (~15 aircraft)', status:'Active — West Papua',
+    active:true, color:'#f59e0b',
+    serviceArea:'West Papua & Kalimantan — interior jungle communities, Papuan highlands',
+    schedule:'Daily operations year-round · supports ~40 unreached tribal translation projects',
+    routes:'Sentani hub → Jayapura region · Papuan highlands · Kalimantan interior strips',
+    trackingNote:'Hub position only — individual aircraft not tracked here · no ADS-B available'
+  },
+  // ── JAARS / Wycliffe ─────────────────────────────────────────
+  {
+    reg:'JAARS-COL', lat:4.71, lng:-74.07,
+    name:'JAARS Colombia', org:'JAARS / Wycliffe Bible Translators',
+    base:'Bogotá, Colombia',
+    note:"JAARS (Jungle Aviation & Radio Service) — Wycliffe's aviation arm. Colombia program serves Amazon basin translation teams working with unreached tribal groups.",
+    type:'Mixed light aircraft fleet', status:'Active — Amazon Basin',
+    active:true, color:'#34d399',
+    serviceArea:'Amazon Basin — Colombia, Peru, Brazil borderlands · unreached tribal territories',
+    schedule:'Active support for ~40 Bible translation teams · flights scheduled around translation team needs',
+    routes:'Bogotá hub → Amazon basin airstrips · Vaupés · Amazonas · Putumayo departments',
+    trackingNote:'Hub position only — small aircraft fleet not tracked via ADS-B'
+  },
+  {
+    reg:'JAARS-PNG', lat:-6.08, lng:145.39,
+    name:'JAARS Papua New Guinea', org:'JAARS / Wycliffe Bible Translators',
+    base:'Goroka, PNG',
+    note:'JAARS PNG — supporting Wycliffe/SIL Bible translation teams across PNG highlands. ~800 active language translation projects in PNG alone.',
+    type:'Mixed light aircraft fleet', status:'Active — PNG Highlands',
+    active:true, color:'#34d399',
+    serviceArea:'PNG Highlands — supporting ~800 active Bible translation projects',
+    schedule:'Ongoing support flights for Wycliffe/SIL translation teams throughout the year',
+    routes:'Goroka hub → PNG highland translation team locations · jungle airstrips',
+    trackingNote:'Hub position only — small aircraft fleet not tracked via ADS-B'
+  },
+  // ── AIM Air ──────────────────────────────────────────────────
+  {
+    reg:'AIM-AIR', lat:-1.32, lng:36.83,
+    name:'AIM Air Nairobi Hub', org:'Africa Inland Mission Air',
+    base:'Wilson Airport, Nairobi, Kenya',
+    note:'AIM Air serves Africa Inland Mission across East Africa — flying missionaries, church workers, and medical teams to remote Kenya, Tanzania, DRC, and South Sudan communities.',
+    type:'Cessna Caravan fleet (~8 aircraft)', status:'Active — East Africa',
+    active:true, color:'#34d399',
+    serviceArea:'East Africa — Kenya, Tanzania, DRC, South Sudan mission stations',
+    schedule:'Daily operations year-round · supports AIM missionaries and church planters across East Africa',
+    routes:'Wilson Airport hub → remote Kenya · Tanzania · eastern DRC · South Sudan mission stations',
+    trackingNote:'Hub position only — small aircraft fleet not tracked via ADS-B'
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — 24-Hour Trail Paths (simulated from known routes)
+// pts: [{lat,lng}] ordered OLDEST → NEWEST (trail fades oldest end)
+// type: 'ship'|'plane'  color: matches marker glow
+// ═══════════════════════════════════════════════════════════════
+const TRAILS = [
+  // ── Africa Mercy — steaming south along Namibian coast toward Cape Town
+  { name:'Africa Mercy', type:'ship', color:'#00e5ff', pts:[
+    {lat:-24.5,lng:13.2},{lat:-25.6,lng:13.8},{lat:-26.8,lng:14.3},
+    {lat:-27.9,lng:15.0},{lat:-29.0,lng:16.1},{lat:-30.2,lng:16.9},
+    {lat:-31.3,lng:17.3},{lat:-32.0,lng:17.7},{lat:-32.8,lng:18.0},
+    {lat:-33.3,lng:18.2},{lat:-33.7,lng:18.32},{lat:-33.93,lng:18.42}
+  ]},
+  // ── Global Mercy — stationary field service in Freetown harbour
+  { name:'Global Mercy', type:'ship', color:'#00e5ff', pts:[
+    {lat:8.52,lng:-13.20},{lat:8.51,lng:-13.21},{lat:8.50,lng:-13.22},
+    {lat:8.50,lng:-13.23},{lat:8.49,lng:-13.23}
+  ]},
+  // ── Logos Hope — transiting north through Gulf of Thailand
+  { name:'Logos Hope', type:'ship', color:'#a78bfa', pts:[
+    {lat:5.35,lng:100.9},{lat:6.8,lng:100.7},{lat:8.4,lng:100.5},
+    {lat:9.7,lng:100.4},{lat:11.0,lng:100.5},{lat:12.2,lng:100.5},
+    {lat:13.2,lng:100.6},{lat:14.09,lng:100.64}
+  ]},
+  // ── Doulos Hope — harbour approach from Batam, Indonesia toward Singapore
+  { name:'Doulos Hope', type:'ship', color:'#a78bfa', pts:[
+    {lat:1.05,lng:104.05},{lat:1.12,lng:103.97},{lat:1.18,lng:103.92},
+    {lat:1.24,lng:103.88},{lat:1.29,lng:103.85}
+  ]},
+  // ── Geo Barents — Central Mediterranean SAR search pattern
+  { name:'Geo Barents', type:'ship', color:'#f97316', pts:[
+    {lat:32.5,lng:13.8},{lat:32.9,lng:14.0},{lat:33.4,lng:13.6},
+    {lat:33.9,lng:13.9},{lat:34.4,lng:14.1},{lat:34.7,lng:14.2},
+    {lat:35.1,lng:14.3},{lat:35.5,lng:14.4},{lat:35.9,lng:14.5}
+  ]},
+  // ── Ocean Viking — Western Med SAR, slightly different corridor
+  { name:'Ocean Viking', type:'ship', color:'#f97316', pts:[
+    {lat:32.2,lng:12.4},{lat:32.7,lng:12.6},{lat:33.1,lng:12.4},
+    {lat:33.7,lng:12.7},{lat:34.2,lng:12.9},{lat:34.7,lng:12.8},
+    {lat:35.1,lng:12.9},{lat:35.5,lng:13.0}
+  ]},
+  // ── WFP MV Gradina — inbound via Red Sea / Bab-el-Mandeb to Djibouti
+  { name:'WFP MV Gradina', type:'ship', color:'#fbbf24', pts:[
+    {lat:15.3,lng:42.7},{lat:14.8,lng:43.0},{lat:14.3,lng:43.1},
+    {lat:13.7,lng:43.15},{lat:13.1,lng:43.2},{lat:12.4,lng:43.15},
+    {lat:11.9,lng:43.1},{lat:11.6,lng:43.15}
+  ]},
+  // ── USNS Comfort — Norfolk homeport, essentially stationary
+  { name:'USNS Comfort', type:'ship', color:'#94a3b8', pts:[
+    {lat:36.82,lng:-76.305},{lat:36.83,lng:-76.298},{lat:36.85,lng:-76.29}
+  ]},
+  // ── USNS Mercy — San Diego homeport, essentially stationary
+  { name:'USNS Mercy', type:'ship', color:'#94a3b8', pts:[
+    {lat:32.665,lng:-117.148},{lat:32.672,lng:-117.143},{lat:32.68,lng:-117.14}
+  ]},
+  // ── Samaritan's Purse DC-8 — Greensboro NC → transatlantic → East Africa
+  { name:'SP DC-8 Flying Hospital', type:'plane', color:'#f59e0b', pts:[
+    {lat:36.1,lng:-79.9},{lat:38.5,lng:-72.0},{lat:40.2,lng:-62.0},
+    {lat:41.0,lng:-50.0},{lat:40.5,lng:-38.5},{lat:39.0,lng:-26.0},
+    {lat:36.2,lng:-15.0},{lat:33.5,lng:-7.0},{lat:29.5,lng:2.0},
+    {lat:24.0,lng:12.0},{lat:19.0,lng:22.0},{lat:15.5,lng:30.0},
+    {lat:14.5,lng:39.5}
+  ]},
+  // ── MAF DRC — Kinshasa → remote jungle strips → return
+  { name:'MAF DR Congo Hub', type:'plane', color:'#f59e0b', pts:[
+    {lat:-4.32,lng:15.32},{lat:-3.5,lng:15.8},{lat:-2.8,lng:16.5},
+    {lat:-2.1,lng:17.2},{lat:-1.5,lng:17.8},{lat:-2.1,lng:17.3},
+    {lat:-2.9,lng:16.7},{lat:-3.7,lng:16.0},{lat:-4.32,lng:15.32}
+  ]},
+  // ── MAF South Sudan — Juba → Yambio remote strips → return
+  { name:'MAF South Sudan Hub', type:'plane', color:'#f59e0b', pts:[
+    {lat:4.85,lng:31.57},{lat:4.2,lng:30.8},{lat:3.5,lng:30.0},
+    {lat:3.1,lng:29.4},{lat:3.5,lng:29.6},{lat:4.0,lng:30.2},
+    {lat:4.5,lng:31.0},{lat:4.85,lng:31.57}
+  ]},
+  // ── MAF PNG — Port Moresby → highlands strips → return
+  { name:'MAF Papua New Guinea Hub', type:'plane', color:'#f59e0b', pts:[
+    {lat:-9.44,lng:147.21},{lat:-8.5,lng:146.5},{lat:-7.8,lng:145.5},
+    {lat:-7.2,lng:144.5},{lat:-6.7,lng:143.9},{lat:-7.5,lng:144.8},
+    {lat:-8.3,lng:145.6},{lat:-9.0,lng:146.5},{lat:-9.44,lng:147.21}
+  ]},
+  // ── MAF Indonesia — Sentani → interior West Papua → return
+  { name:'MAF Indonesia Hub', type:'plane', color:'#f59e0b', pts:[
+    {lat:-2.51,lng:140.52},{lat:-3.0,lng:139.0},{lat:-3.8,lng:138.0},
+    {lat:-4.1,lng:137.0},{lat:-3.8,lng:137.5},{lat:-3.2,lng:138.5},
+    {lat:-2.8,lng:139.5},{lat:-2.51,lng:140.52}
+  ]},
+  // ── JAARS Colombia — Bogotá → Amazon basin translation teams → return
+  { name:'JAARS Colombia', type:'plane', color:'#34d399', pts:[
+    {lat:4.71,lng:-74.07},{lat:3.5,lng:-73.5},{lat:2.3,lng:-73.0},
+    {lat:1.2,lng:-72.2},{lat:0.3,lng:-71.5},{lat:-1.0,lng:-70.8},
+    {lat:-0.2,lng:-71.2},{lat:1.0,lng:-72.0},{lat:2.2,lng:-72.8},
+    {lat:3.5,lng:-73.5},{lat:4.71,lng:-74.07}
+  ]},
+  // ── JAARS PNG — Goroka → remote highland strips → return
+  { name:'JAARS Papua New Guinea', type:'plane', color:'#34d399', pts:[
+    {lat:-6.08,lng:145.39},{lat:-6.5,lng:144.8},{lat:-6.85,lng:144.2},
+    {lat:-6.5,lng:143.8},{lat:-6.0,lng:144.1},{lat:-5.7,lng:144.7},
+    {lat:-6.08,lng:145.39}
+  ]},
+  // ── AIM Air — Wilson Airport Nairobi → northern Kenya → return
+  { name:'AIM Air Nairobi Hub', type:'plane', color:'#34d399', pts:[
+    {lat:-1.32,lng:36.83},{lat:0.2,lng:36.5},{lat:1.8,lng:36.2},
+    {lat:3.5,lng:36.0},{lat:5.1,lng:36.5},{lat:3.8,lng:36.8},
+    {lat:2.0,lng:36.7},{lat:0.5,lng:36.7},{lat:-1.32,lng:36.83}
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — USCIRF 2025 Annual Report
+// tier: 'CPC'=Countries of Particular Concern (worst)
+//       'CPC_REC'=USCIRF recommended CPC (not yet officially designated)
+//       'SWL'=Special Watch List
+// ═══════════════════════════════════════════════════════════════
+const USCIRF = [
+  {i:'PRK',n:'North Korea',tier:'CPC',note:"CPC since 1999. Total elimination of independent religion. Christians face death, labor camps, torture if discovered."},
+  {i:'CHN',n:'China',tier:'CPC',note:'CPC. Mass detention of Uyghurs, Tibetans, Falun Gong. Underground church raids. AI-powered religious surveillance.'},
+  {i:'IRN',n:'Iran',tier:'CPC',note:"CPC. Systematic imprisonment of Christians, Baha'is, Sunnis. Death sentences for apostasy from Islam."},
+  {i:'SAU',n:'Saudi Arabia',tier:'CPC',note:'CPC. No churches permitted for nationals. Apostasy punishable by death. Complete absence of religious freedom.'},
+  {i:'PAK',n:'Pakistan',tier:'CPC',note:'CPC. Blasphemy laws weaponized to imprison and execute Christians. Forced conversion of girls. Mob violence unpunished.'},
+  {i:'RUS',n:'Russia',tier:'CPC',note:"CPC since 2022. Bans Jehovah's Witnesses, criminalizes Ukrainian Orthodox. War weaponizes religion. Pastors imprisoned."},
+  {i:'MMR',n:'Myanmar',tier:'CPC',note:'CPC. Military junta bombs ethnic Christian Karen/Kachin villages. Systematic destruction of churches.'},
+  {i:'ERI',n:'Eritrea',tier:'CPC',note:'CPC. Only 4 denominations recognized. Christians imprisoned in metal shipping containers without trial for years.'},
+  {i:'CUB',n:'Cuba',tier:'CPC',note:'CPC. Communist government surveils, raids, and imprisons church leaders. Church property confiscated at scale.'},
+  {i:'TJK',n:'Tajikistan',tier:'CPC',note:'CPC. Government bans almost all independent religious practice. Severe penalties for teaching children religion.'},
+  {i:'TKM',n:'Turkmenistan',tier:'CPC',note:'CPC. Near-total state control of religion. Bibles confiscated. Believers fined, imprisoned, beaten.'},
+  {i:'NIC',n:'Nicaragua',tier:'CPC',note:"CPC since 2022. Ortega expelled Catholic bishops, dissolved 1,500+ Christian NGOs, jailed priests."},
+  {i:'AFG',n:'Afghanistan',tier:'CPC_REC',note:'USCIRF recommends CPC designation. Taliban rule makes Christian practice punishable by execution. Zero legal protection.'},
+  {i:'IND',n:'India',tier:'CPC_REC',note:'USCIRF recommends CPC. Hindu nationalist attacks on churches at record levels. Anti-conversion laws in 12 states.'},
+  {i:'NGA',n:'Nigeria',tier:'CPC_REC',note:'USCIRF recommends CPC. Government failure to prosecute Boko Haram/Fulani killings of 5,000+ Christians annually.'},
+  {i:'VNM',n:'Vietnam',tier:'CPC_REC',note:'USCIRF recommends CPC. Registration system weaponized to ban unregistered churches. Hmong/Montagnard Christians targeted.'},
+  {i:'DZA',n:'Algeria',tier:'SWL',note:'Special Watch List. Church closures accelerating. Protestant pastors imprisoned. Kabyle converts targeted.'},
+  {i:'AZE',n:'Azerbaijan',tier:'SWL',note:'Special Watch List. Registration system restricts all religious activity. Raids on minority Christian groups.'},
+  {i:'CAF',n:'Central African Rep.',tier:'SWL',note:'Special Watch List. Armed groups target religious sites. Government lacks capacity to protect religious minorities.'},
+  {i:'EGY',n:'Egypt',tier:'SWL',note:"Special Watch List. Coptic church attacks continue. Discriminatory laws obstruct church construction permits."},
+  {i:'IDN',n:'Indonesia',tier:'SWL',note:'Special Watch List. Church closures increasing in Java. Blasphemy law used against religious minorities.'},
+  {i:'IRQ',n:'Iraq',tier:'SWL',note:'Special Watch List. Christian population collapsed from 1.5M to 200K. Church property still unreturned.'},
+  {i:'KAZ',n:'Kazakhstan',tier:'SWL',note:'Special Watch List. Fines for unregistered religious activity. Literature confiscated. Foreign missionaries deported.'},
+  {i:'KGZ',n:'Kyrgyzstan',tier:'SWL',note:'Special Watch List. Restrictive religion law. Raids on minority Christian groups. Anti-conversion sentiment rising.'},
+  {i:'MYS',n:'Malaysia',tier:'SWL',note:'Special Watch List. Muslim converts face courts, imprisonment, forced reconversion through syariah system.'},
+  {i:'MEX',n:'Mexico',tier:'SWL',note:'Special Watch List. Indigenous community expulsion of Christians. Cartel threats against pastors unanswered by state.'},
+  {i:'LKA',n:'Sri Lanka',tier:'SWL',note:'Special Watch List. Buddhist nationalist attacks on churches. Authorities fail to prosecute perpetrators.'},
+  {i:'SYR',n:'Syria',tier:'SWL',note:'Special Watch List. New HTS governance in northwest raises serious religious freedom concerns.'},
+  {i:'TUR',n:'Turkey',tier:'SWL',note:'Special Watch List. No legal status for non-Muslim communities. Church property seized. Workers killed.'},
+  {i:'UZB',n:'Uzbekistan',tier:'SWL',note:'Special Watch List. Religious literature confiscated. Believers arrested for private worship.'},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — UNHCR Refugee Crisis (Global Trends 2024)
+// ═══════════════════════════════════════════════════════════════
+const REFUGEES = [
+  {i:'SDN',n:'Sudan',hosted:1100,origin:7500,idp:11000,score:10,note:"World's largest displacement crisis as of 2024. 11M+ IDPs, 7.5M fled abroad. RSF-SAF war destroyed all protection systems."},
+  {i:'SYR',n:'Syria',hosted:20,origin:6500,idp:7200,score:10,note:'6.5M refugees + 7.2M IDPs. 13 years of civil war created largest protracted refugee crisis in the world.'},
+  {i:'AFG',n:'Afghanistan',hosted:400,origin:6100,idp:4400,score:10,note:'6.1M Afghan refugees — second largest globally. 4.4M IDPs. Taliban rule halted return movements.'},
+  {i:'VEN',n:'Venezuela',hosted:30,origin:7700,idp:300,score:9,note:'7.7M displaced (Bolívarian exodus). Largest displacement crisis in Western Hemisphere. Economic/political collapse.'},
+  {i:'COD',n:'DR Congo',hosted:500,origin:1000,idp:7200,score:9,note:"7.2M IDPs — Africa's largest internal displacement. 1M+ refugees in neighboring states."},
+  {i:'UKR',n:'Ukraine',hosted:30,origin:6500,idp:3600,score:9,note:'6.5M refugees in Europe, 3.6M IDPs. Largest displacement crisis in Europe since WWII.'},
+  {i:'SOM',n:'Somalia',hosted:50,origin:2700,idp:3800,score:8,note:'2.7M refugees + 3.8M IDPs. Protracted 30-year crisis from conflict, drought, famine cycles.'},
+  {i:'MMR',n:'Myanmar',hosted:100,origin:2000,idp:2600,score:8,note:'2M+ Rohingya refugees in Bangladesh, Malaysia. 2.6M IDPs from military coup violence.'},
+  {i:'ETH',n:'Ethiopia',hosted:900,origin:500,idp:4500,score:7,note:'4.5M IDPs from Tigray/Amhara/Oromia conflicts. 900K refugees hosted. Major humanitarian crisis.'},
+  {i:'YEM',n:'Yemen',hosted:30,origin:200,idp:4500,score:7,note:'4.5M IDPs from decade of war. Humanitarian catastrophe — entire civilian infrastructure destroyed.'},
+  {i:'SSD',n:'South Sudan',hosted:300,origin:2300,idp:1700,score:7,note:'2.3M South Sudanese refugees in region. 1.7M IDPs. Repeated cycles of violence prevent durable solutions.'},
+  {i:'COL',n:'Colombia',hosted:2800,origin:100,idp:4900,score:7,note:'2.8M Venezuelan refugees/migrants hosted. 4.9M IDPs from FARC/ELN conflict — ongoing cycle.'},
+  {i:'TUR',n:'Turkey',hosted:3200,origin:20,idp:0,score:6,note:'3.2M Syrians registered — world largest refugee-hosting country. Political pressure mounting for returns.'},
+  {i:'IRN',n:'Iran',hosted:3500,origin:10,idp:0,score:5,note:'3.5M Afghan + Iraqi refugees — major hosting burden without full UNHCR access. Many unregistered.'},
+  {i:'PAK',n:'Pakistan',hosted:1900,origin:10,idp:600,score:6,note:'1.9M registered Afghan refugees + millions unregistered. Mass deportation campaign 2023–24.'},
+  {i:'BGD',n:'Bangladesh',hosted:970,origin:10,idp:0,score:5,note:"970K Rohingya in Cox's Bazar — world's largest refugee settlement. Stateless and restricted."},
+  {i:'UGA',n:'Uganda',hosted:1700,origin:20,idp:0,score:5,note:"1.7M refugees. Africa's most progressive refugee policy — settlement rights and land allocation."},
+  {i:'CAF',n:'Central African Rep.',hosted:30,origin:800,idp:1000,score:6,note:'800K CAR refugees in neighboring states. 1M IDPs from endless armed group cycles.'},
+  {i:'NGA',n:'Nigeria',hosted:90,origin:90,idp:3600,score:6,note:'3.6M IDPs — Africa largest IDP population. Boko Haram + Fulani violence in northeast.'},
+  {i:'HTI',n:'Haiti',hosted:10,origin:200,idp:600,score:6,note:'700K+ displaced by gang violence. Near-state-collapse driving regional refugee movements.'},
+  {i:'IRQ',n:'Iraq',hosted:300,origin:300,idp:1100,score:5,note:'1.1M IDPs remaining from ISIS-era displacement. 300K refugees hosted. Slow return process.'},
+  {i:'MLI',n:'Mali',hosted:40,origin:300,idp:400,score:5,note:'300K+ Malians displaced by jihadist insurgency. Regional destabilization spreading.'},
+  {i:'CMR',n:'Cameroon',hosted:450,origin:110,idp:1000,score:5,note:'450K refugees hosted from Nigeria/CAF/Sudan. 1M+ IDPs from Anglophone + Far North crises.'},
+  {i:'BFA',n:'Burkina Faso',hosted:10,origin:100,idp:2000,score:6,note:'2M+ IDPs — one of fastest-growing displacement crises. Jihadist siege of towns.'},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — World Bank Extreme Poverty (PovcalNet / WDI 2023)
+// score = % below $2.15/day international poverty line
+// ═══════════════════════════════════════════════════════════════
+const POVERTY = [
+  {i:'PRK',n:'North Korea',score:85,gni:null,note:'Estimated 85%+ in extreme poverty. No external verification possible. State apparatus captures all resources for military.'},
+  {i:'SSD',n:'South Sudan',score:76,gni:440,note:"World's poorest country by per-capita income. 76% below $2.15/day. Oil revenue captured entirely by warring elites."},
+  {i:'SOM',n:'Somalia',score:73,gni:310,note:'73% in extreme poverty. No functioning government services for 30+ years. Nearly all aid dependency.'},
+  {i:'COD',n:'DR Congo',score:73,gni:560,note:'73% extreme poverty despite world-class mineral wealth. 100 years of extraction without development.'},
+  {i:'CAF',n:'Central African Rep.',score:71,gni:510,note:'71% extreme poverty. Perpetual armed conflict hollowed all public services and economic activity.'},
+  {i:'BDI',n:'Burundi',score:70,gni:230,note:'70% extreme poverty. Densest country in Africa. Political instability stalled all development.'},
+  {i:'AFG',n:'Afghanistan',score:70,gni:370,note:"70% poverty under Taliban. Female exclusion from workforce costs ~5% GDP. Humanitarian aid dependency."},
+  {i:'SYR',n:'Syria',score:90,gni:400,note:'~90% poverty after 13 years of war. GDP contracted 80% since 2011. Entire middle class destroyed.'},
+  {i:'YEM',n:'Yemen',score:78,gni:780,note:'78% poverty after decade of war. GDP fell 50%. Oil infrastructure targeted and destroyed.'},
+  {i:'MDG',n:'Madagascar',score:68,gni:510,note:'68% extreme poverty. Recurrent cyclones + endemic corruption prevent recovery.'},
+  {i:'MOZ',n:'Mozambique',score:65,gni:490,note:'65% extreme poverty despite major LNG resources. Jihadist insurgency in north disrupting development.'},
+  {i:'MWI',n:'Malawi',score:69,gni:640,note:'69% extreme poverty. Agriculture-dependent. Climate shocks destroy harvests. Aid reliance high.'},
+  {i:'NER',n:'Niger',score:62,gni:590,note:'Lowest HDI globally. 62% extreme poverty. Post-coup suspension of aid worsening crisis.'},
+  {i:'ZMB',n:'Zambia',score:58,gni:1080,note:'58% extreme poverty. Debt crisis + copper price volatility. High inequality index.'},
+  {i:'SLE',n:'Sierra Leone',score:57,gni:480,note:'57% extreme poverty. Ebola + COVID wiped out recovery gains. Youth unemployment 60%+.'},
+  {i:'MLI',n:'Mali',score:55,gni:830,note:'55% extreme poverty. Sahel drought + jihadist conflict destroyed rural economies.'},
+  {i:'GIN',n:'Guinea',score:43,gni:1050,note:'43% poverty despite world-largest bauxite reserves. Colonial extraction legacy. Frequent coups.'},
+  {i:'BFA',n:'Burkina Faso',score:43,gni:770,note:'43% extreme poverty. Conflict displacement surging. 2M+ IDPs draining all resources.'},
+  {i:'NGA',n:'Nigeria',score:40,gni:2230,note:'40% poverty — but 80M+ Nigerians in poverty = most Africans in extreme poverty live here.'},
+  {i:'ZWE',n:'Zimbabwe',score:49,gni:1170,note:'49% poverty. 20+ years of economic mismanagement. Hyperinflation legacy.'},
+  {i:'HTI',n:'Haiti',score:48,gni:1330,note:'48% poverty. Western Hemisphere poorest. Gang collapse of state in 2024 erasing gains.'},
+  {i:'TCD',n:'Chad',score:37,gni:720,note:'37% poverty. Climate change rendering Lake Chad region uninhabitable. Conflict spill-overs.'},
+  {i:'ETH',n:'Ethiopia',score:30,gni:1020,note:'30% poverty. Tigray war reversed decade of economic gains. 22M food insecure.'},
+  {i:'CMR',n:'Cameroon',score:27,gni:1600,note:'27% poverty. Northern regions in acute poverty. Anglophone crisis destroying local business.'},
+  {i:'MMR',n:'Myanmar',score:40,gni:1060,note:'40% poverty after military coup. Economy contracted 30%. All foreign investment fled.'},
+  {i:'VEN',n:'Venezuela',score:45,gni:3620,note:'45% poverty despite oil wealth. Economic collapse under Maduro. 7.7M emigrated.'},
+  {i:'PAK',n:'Pakistan',score:28,gni:1580,note:'28% poverty. Economic crisis 2023. IMF bailouts. Catastrophic flood disasters erasing gains.'},
+  {i:'BGD',n:'Bangladesh',score:21,gni:2560,note:'21% poverty — rapid progress but 35M still poor. Climate vulnerability rising sharply.'},
+  {i:'IND',n:'India',score:10,gni:2380,note:'10% at $2.15 threshold but 229M still in poverty. Caste system perpetuates structural exclusion.'},
+  {i:'KHM',n:'Cambodia',score:17,gni:1770,note:'17% poverty. Rapid growth but garment-export dependent. Authoritarian governance risks.'},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — FEWS NET / IPC Food Crisis Phases (2024–2025)
+// phase: 2=Stressed 3=Crisis 4=Emergency 5=Famine/Catastrophe
+// ═══════════════════════════════════════════════════════════════
+const FAMINE = [
+  {i:'SDN',n:'Sudan',phase:5,pop:25000000,note:'Active famine declared 2024 — North Darfur. 25M+ face acute food insecurity. War destroyed food systems.'},
+  {i:'PSE',n:'Palestine/Gaza',phase:5,pop:2100000,note:'IPC Phase 5 (Famine) declared in Gaza 2024. Entire population faces catastrophic food conditions.'},
+  {i:'YEM',n:'Yemen',phase:4,pop:17600000,note:'17.6M food insecure. Decade of war destroyed agriculture, fishing and supply infrastructure.'},
+  {i:'PRK',n:'North Korea',phase:4,pop:18900000,note:'Structural famine masked by state propaganda. 18.9M food insecure. No external aid access allowed.'},
+  {i:'NGA',n:'Nigeria',phase:4,pop:18600000,note:'18.6M food insecure in NW/NE Nigeria. Boko Haram disruption + flooding + inflation spiral.'},
+  {i:'COD',n:'DR Congo',phase:4,pop:25000000,note:"25M food insecure — Africa's largest food crisis. Armed groups prevent seasonal farming."},
+  {i:'HTI',n:'Haiti',phase:4,pop:5500000,note:'5.5M food insecure. Gang control of supply routes caused complete food system collapse.'},
+  {i:'BFA',n:'Burkina Faso',phase:4,pop:5200000,note:'5.2M in crisis+. Jihadist siege of towns blocks humanitarian food delivery.'},
+  {i:'AFG',n:'Afghanistan',phase:4,pop:14900000,note:'14.9M in crisis or emergency. Taliban economic policies + drought collapsed livelihoods.'},
+  {i:'SSD',n:'South Sudan',phase:4,pop:7700000,note:'7.7M in Emergency/Famine conditions. Flooding + conflict + economic collapse.'},
+  {i:'ETH',n:'Ethiopia',phase:4,pop:15000000,note:'15M+ food insecure. Tigray conflict aftermath + drought in southern regions.'},
+  {i:'SOM',n:'Somalia',phase:4,pop:4500000,note:'4.5M acutely food insecure. Recurrent drought cycles threaten famine return.'},
+  {i:'SYR',n:'Syria',phase:3,pop:12000000,note:'12M food insecure. 13 years of war destroyed infrastructure and agricultural capacity.'},
+  {i:'MMR',n:'Myanmar',phase:3,pop:13300000,note:'13.3M face food insecurity. Military coup dismantled food aid systems.'},
+  {i:'MLI',n:'Mali',phase:3,pop:3600000,note:'3.6M food insecure. Jihadist expansion + drought + WFP funding cuts.'},
+  {i:'NER',n:'Niger',phase:3,pop:3200000,note:'3.2M food insecure. Post-coup aid suspension + climate shocks compounding.'},
+  {i:'CMR',n:'Cameroon',phase:3,pop:4400000,note:'4.4M food insecure in Far North and Northwest regions.'},
+  {i:'MOZ',n:'Mozambique',phase:3,pop:2000000,note:'2M food insecure in northern Cabo Delgado from jihadist insurgency.'},
+  {i:'ZWE',n:'Zimbabwe',phase:3,pop:2800000,note:'El Niño-induced drought. 2.8M face food crisis after severe harvest failures.'},
+  {i:'KEN',n:'Kenya',phase:3,pop:4200000,note:'4.2M food insecure. Drought cycle recovery incomplete; inflation reducing food access.'},
+  {i:'MDG',n:'Madagascar',phase:3,pop:1300000,note:'Southern Madagascar faces IPC Phase 3. Cyclones + droughts in Androy region.'},
+  {i:'VEN',n:'Venezuela',phase:3,pop:6100000,note:'6.1M food insecure. Economic collapse + mass emigration depleted agricultural workforce.'},
+  {i:'CAF',n:'Central African Rep.',phase:3,pop:1900000,note:'1.9M crisis-level hunger. Armed groups prevent farming in vast territories.'},
+  {i:'COL',n:'Colombia',phase:2,pop:3100000,note:'3.1M stressed. Venezuelan refugee influx straining food systems in border regions.'},
+  {i:'UKR',n:'Ukraine',phase:2,pop:5100000,note:'5.1M food insecure due to ongoing war. World largest grain exporter under attack.'},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// NUMERIC ISO → ISO-3 ALPHA
+// ═══════════════════════════════════════════════════════════════
+const N2I = {
+  4:'AFG',8:'ALB',12:'DZA',24:'AGO',32:'ARG',36:'AUS',40:'AUT',50:'BGD',
+  56:'BEL',64:'BTN',68:'BOL',72:'BWA',76:'BRA',100:'BGR',104:'MMR',108:'BDI',
+  116:'KHM',120:'CMR',124:'CAN',140:'CAF',144:'LKA',148:'TCD',156:'CHN',
+  170:'COL',174:'COM',178:'COG',180:'COD',188:'CRI',191:'HRV',192:'CUB',
+  196:'CYP',203:'CZE',204:'BEN',208:'DNK',214:'DOM',218:'ECU',818:'EGY',
+  222:'SLV',226:'GNQ',231:'ETH',232:'ERI',233:'EST',246:'FIN',250:'FRA',
+  262:'DJI',266:'GAB',276:'DEU',288:'GHA',300:'GRC',320:'GTM',324:'GIN',
+  332:'HTI',340:'HND',356:'IND',360:'IDN',364:'IRN',368:'IRQ',372:'IRL',
+  376:'ISR',388:'JAM',392:'JPN',398:'KAZ',400:'JOR',404:'KEN',408:'PRK',
+  410:'KOR',414:'KWT',417:'KGZ',418:'LAO',422:'LBN',430:'LBR',434:'LBY',
+  440:'LTU',450:'MDG',454:'MWI',458:'MYS',462:'MDV',466:'MLI',484:'MEX',
+  496:'MNG',504:'MAR',508:'MOZ',516:'NAM',524:'NPL',528:'NLD',562:'NER',
+  566:'NGA',578:'NOR',586:'PAK',591:'PAN',598:'PNG',604:'PER',608:'PHL',
+  616:'POL',620:'PRT',634:'QAT',642:'ROU',643:'RUS',646:'RWA',682:'SAU',
+  686:'SEN',694:'SLE',706:'SOM',710:'ZAF',716:'ZWE',724:'ESP',729:'SDN',
+  740:'SUR',752:'SWE',756:'CHE',760:'SYR',762:'TJK',764:'THA',768:'TGO',
+  780:'TTO',784:'ARE',788:'TUN',792:'TUR',795:'TKM',800:'UGA',804:'UKR',
+  826:'GBR',834:'TZA',840:'USA',854:'BFA',858:'URY',860:'UZB',862:'VEN',
+  882:'WSM',887:'YEM',894:'ZMB',480:'MUS',630:'PRI',
+};
+
+const CENT = {
+  PRK:{a:40.3,o:127.5},SOM:{a:5.2,o:46.2},YEM:{a:15.5,o:48.5},SDN:{a:15.6,o:30.0},
+  ERI:{a:15.2,o:39.8},SYR:{a:34.8,o:38.1},NGA:{a:9.1,o:8.7},PAK:{a:30.4,o:69.3},
+  LBY:{a:27.0,o:17.2},IRN:{a:32.4,o:53.7},AFG:{a:33.9,o:67.7},IND:{a:20.6,o:79.0},
+  SAU:{a:23.9,o:45.1},MMR:{a:19.2,o:96.7},MLI:{a:17.6,o:-2.0},BFA:{a:12.4,o:-1.6},
+  CHN:{a:35.9,o:104.2},IRQ:{a:33.2,o:43.7},ETH:{a:9.1,o:40.5},LAO:{a:19.9,o:102.5},
+  BGD:{a:23.7,o:90.4},EGY:{a:26.8,o:30.8},DZA:{a:28.0,o:2.6},MOZ:{a:-18.7,o:35.5},
+  MAR:{a:31.8,o:-7.1},MDV:{a:3.2,o:73.2},TUN:{a:33.9,o:9.5},UZB:{a:41.4,o:64.6},
+  VNM:{a:14.1,o:108.3},COL:{a:4.6,o:-74.3},CAF:{a:6.6,o:20.9},AZE:{a:40.1,o:47.6},
+  COD:{a:-4.0,o:21.8},KAZ:{a:48.0,o:66.9},NER:{a:17.6,o:8.1},CUB:{a:21.5,o:-79.5},
+  IDN:{a:-0.8,o:113.9},TJK:{a:38.9,o:71.3},JOR:{a:31.2,o:36.5},QAT:{a:25.4,o:51.2},
+  MEX:{a:23.6,o:-102.6},KWT:{a:29.3,o:47.5},ARE:{a:24.5,o:54.0},BTN:{a:27.5,o:90.4},
+  CMR:{a:5.7,o:12.3},MYS:{a:4.2,o:108.0},TUR:{a:38.9,o:35.2},COM:{a:-11.6,o:43.3},
+  KEN:{a:-1.3,o:36.8},RUS:{a:61.5,o:105.3},MRT:{a:20.3,o:-10.9},TKM:{a:40.0,o:59.6},
+  NPL:{a:28.4,o:84.1},THA:{a:15.9,o:100.9},JPN:{a:36.2,o:138.3},KGZ:{a:41.2,o:74.8},
+  MNG:{a:46.9,o:103.8},SEN:{a:14.5,o:-14.5},OMN:{a:21.5,o:55.9},UKR:{a:49.0,o:31.5},
+  HTI:{a:19.0,o:-72.3},PNG:{a:-6.3,o:143.9},KHM:{a:12.6,o:104.9},
+};
+
+// Lookup maps
+const wMap={},jMap={},bMap={},iMap={},refMap={},povMap={},famMap={},uscrfMap={};
+WWL.forEach(d=>wMap[d.i]=d); JP.forEach(d=>jMap[d.i]=d);
+BIBLE.forEach(d=>bMap[d.i]=d);
+INTERNET.forEach(d=>iMap[d.i]=d);
+REFUGEES.forEach(d=>refMap[d.i]=d);
+POVERTY.forEach(d=>povMap[d.i]=d);
+FAMINE.forEach(d=>famMap[d.i]=d);
+USCIRF.forEach(d=>uscrfMap[d.i]=d);
+
+// ═══════════════════════════════════════════════════════════════
+// APP STATE
+// ═══════════════════════════════════════════════════════════════
+let selectedNumId = null; // currently selected country (numeric topo ID)
+
+const state = {
+  countryLayer: 'persecution',
+  eventLayers: new Set(),
+  liveData: {earthquakes:[], disasters:[]},
+  showHeatmap: true,
+  show1040: false,
+  showArcs: false,
+};
+
+// ═══════════════════════════════════════════════════════════════
+// COLOR FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+// Converts a #rrggbb hex to rgba(...) with given alpha (0–1)
+function hexA(hex, a) {
+  const h = hex.replace('#','');
+  const r = parseInt(h.slice(0,2),16);
+  const g = parseInt(h.slice(2,4),16);
+  const b = parseInt(h.slice(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+// Wrap cap color: data countries at 0.62 alpha, base fill at 0.28
+function capColor(hex) {
+  const base = '#1a3452';
+  if (hex === base || hex === '#1e3a5c') return hexA(hex, 0.28);
+  return hexA(hex, 0.62);
+}
+function sColor(s) {
+  if (s>=81) return '#c80f0f'; if (s>=61) return '#d95a08'; if (s>=41) return '#c89808'; return '#1e3a5c';
+}
+function uColor(u) {
+  if (u>=99) return '#0a38cc'; if (u>=95) return '#1a5ed4'; if (u>=90) return '#2a82d8';
+  if (u>=80) return '#4aa2de'; if (u>=50) return '#7ac4e8'; return '#1e3a5c';
+}
+function bColor(s) {
+  if (!s) return '#1a3452';
+  if (s>=5) return '#004d40'; if (s>=4) return '#00695c'; if (s>=3) return '#00897b';
+  if (s>=2) return '#26a69a'; return '#80cbc4';
+}
+function netColor(s) {
+  if (!s) return '#1a3452';
+  if (s>=80) return '#bf360c'; if (s>=60) return '#e64a19'; if (s>=40) return '#ff7043'; return '#1a3452';
+}
+function rColor(d) {
+  if (!d) return '#1a3452';
+  if (d.score>=9) return '#004d40'; if (d.score>=7) return '#00695c';
+  if (d.score>=5) return '#00897b'; if (d.score>=3) return '#26a69a'; return '#4db6ac';
+}
+function povColor(s) {
+  if (!s) return '#1a3452';
+  if (s>=70) return '#e65100'; if (s>=50) return '#f57c00';
+  if (s>=30) return '#fb8c00'; if (s>=15) return '#ffa726'; return '#1a3452';
+}
+function famColor(p) {
+  if (!p) return '#1a3452';
+  if (p>=5) return '#b71c1c'; if (p>=4) return '#c62828';
+  if (p>=3) return '#d84315'; return '#1a3452';
+}
+function uscrfColor(tier) {
+  if (tier==='CPC') return '#b71c1c';
+  if (tier==='CPC_REC') return '#d32f2f';
+  if (tier==='SWL') return '#e53935';
+  return '#1a3452';
+}
+function getColor(numId, layer) {
+  const iso=N2I[numId]; if (!iso) return '#1a3452';
+  if (layer==='persecution'){const d=wMap[iso];return d?sColor(d.s):'#1a3452';}
+  if (layer==='unreached'){const d=jMap[iso];return d?uColor(d.u):'#1a3452';}
+  if (layer==='bible'){const d=bMap[iso];return d?bColor(d.score):'#1a3452';}
+  if (layer==='internet'){const d=iMap[iso];return d?netColor(d.score):'#1a3452';}
+  if (layer==='refugees'){return rColor(refMap[iso]);}
+  if (layer==='poverty'){const d=povMap[iso];return d?povColor(d.score):'#1a3452';}
+  if (layer==='famine'){const d=famMap[iso];return d?famColor(d.phase):'#1a3452';}
+  if (layer==='uscirf'){const d=uscrfMap[iso];return d?uscrfColor(d.tier):'#1a3452';}
+  return '#1a3452';
+}
+function getAlt(numId, layer) {
+  const iso=N2I[numId]; if (!iso) return numId===selectedNumId?0.1:0.01;
+  let alt = 0.01;
+  if (layer==='persecution'){const d=wMap[iso];alt=d?0.01+(d.s/100)*0.18:0.01;}
+  else if (layer==='unreached'){const d=jMap[iso];alt=d?0.01+(d.u/100)*0.15:0.01;}
+  else if (layer==='bible'){const d=bMap[iso];alt=d?0.01+(d.score/5)*0.14:0.01;}
+  else if (layer==='internet'){const d=iMap[iso];alt=d?0.01+(d.score/100)*0.14:0.01;}
+  else if (layer==='refugees'){const d=refMap[iso];alt=d?0.01+(d.score/10)*0.16:0.01;}
+  else if (layer==='poverty'){const d=povMap[iso];alt=d?0.01+(d.score/100)*0.16:0.01;}
+  else if (layer==='famine'){const d=famMap[iso];alt=d?0.01+((d.phase-1)/4)*0.18:0.01;}
+  else if (layer==='uscirf'){const d=uscrfMap[iso];if(d){const t=d.tier==='CPC'?1:d.tier==='CPC_REC'?0.75:0.5;alt=0.01+t*0.16;}}
+  if (numId===selectedNumId) alt = Math.max(alt, 0.08) + 0.09; // selection glow boost
+  return alt;
+}
+function getSide(iso, layer) {
+  if (layer==='persecution'&&wMap[iso]) return 'rgba(255,40,40,0.5)';
+  if (layer==='unreached'&&jMap[iso]) return 'rgba(40,120,255,0.5)';
+  if (layer==='bible'&&bMap[iso]) return 'rgba(0,150,130,0.5)';
+  if (layer==='internet'&&iMap[iso]) return 'rgba(230,100,50,0.5)';
+  if (layer==='refugees'&&refMap[iso]) return 'rgba(0,150,130,0.5)';
+  if (layer==='poverty'&&povMap[iso]) return 'rgba(245,127,23,0.5)';
+  if (layer==='famine'&&famMap[iso]) return 'rgba(183,28,28,0.5)';
+  if (layer==='uscirf'&&uscrfMap[iso]) return 'rgba(183,28,28,0.5)';
+  return 'rgba(30,90,150,0.2)';
+}
+function getLabel(numId) {
+  const iso=N2I[numId]; if (!iso) return '';
+  const w=wMap[iso],j=jMap[iso],b=bMap[iso],net=iMap[iso],ref=refMap[iso],pov=povMap[iso],fam=famMap[iso],usc=uscrfMap[iso];
+  const nm=(w?.n||j?.n||b?.n||net?.n||ref?.n||pov?.n||fam?.n||usc?.n||iso).toUpperCase();
+  if (!w&&!j&&!b&&!net&&!ref&&!pov&&!fam&&!usc)
+    return `<div class="gt"><div class="gt-name">${nm}</div><div class="gt-row"><span class="gt-lbl">NO CRISIS DATA</span><span class="gt-val" style="color:rgba(0,212,255,0.35)">NOT IN TRACKED LAYERS</span></div></div>`;
+  let h=`<div class="gt"><div class="gt-name">${nm}</div>`;
+  if (w) h+=`<div class="gt-row"><span class="gt-lbl">PERSECUTION</span><span class="gt-red">${w.lv.toUpperCase()} #${w.r}</span></div>`;
+  if (j) h+=`<div class="gt-row"><span class="gt-lbl">UNREACHED</span><span class="gt-blue">${j.u}% · ${j.g} UPGs</span></div>`;
+  if (fam) h+=`<div class="gt-row"><span class="gt-lbl">FOOD CRISIS</span><span class="gt-red">IPC PHASE ${fam.phase}</span></div>`;
+  if (ref) h+=`<div class="gt-row"><span class="gt-lbl">REFUGEES/IDPs</span><span class="gt-val" style="color:#4db6ac">SCORE ${ref.score}/10</span></div>`;
+  if (pov) h+=`<div class="gt-row"><span class="gt-lbl">POVERTY</span><span class="gt-orange">${pov.score}% below $2.15/day</span></div>`;
+  if (b) h+=`<div class="gt-row"><span class="gt-lbl">BIBLE ACCESS</span><span class="gt-val" style="color:#4db6ac">SCORE ${b.score}/5</span></div>`;
+  if (net) h+=`<div class="gt-row"><span class="gt-lbl">INTERNET</span><span class="gt-orange">${net.status}</span></div>`;
+  if (usc) h+=`<div class="gt-row"><span class="gt-lbl">USCIRF</span><span class="gt-red">${usc.tier==='CPC'?'COUNTRY OF CONCERN':usc.tier==='CPC_REC'?'CPC (RECOMMENDED)':'WATCH LIST'}</span></div>`;
+  return h+'</div>';
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// RINGS
+// ═══════════════════════════════════════════════════════════════
+function getRings(layer) {
+  let r=[];
+  if (layer==='persecution') r=WWL.filter(d=>d.s>=74&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'p'}));
+  else if (layer==='unreached') r=JP.filter(d=>d.u>=99&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'u'}));
+  else if (layer==='bible') r=BIBLE.filter(d=>d.score>=4&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'b'}));
+  else if (layer==='internet') r=INTERNET.filter(d=>d.score>=75&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'net'}));
+  else if (layer==='refugees') r=REFUGEES.filter(d=>d.score>=8&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'ref'}));
+  else if (layer==='poverty') r=POVERTY.filter(d=>d.score>=60&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'pov'}));
+  else if (layer==='famine') r=FAMINE.filter(d=>d.phase>=4&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'fam'}));
+  else if (layer==='uscirf') r=USCIRF.filter(d=>d.tier==='CPC'&&CENT[d.i]).map(d=>({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'usc'}));
+  else {
+    WWL.filter(d=>d.s>=80&&CENT[d.i]).forEach(d=>r.push({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'p'}));
+    JP.filter(d=>d.u>=99.5&&CENT[d.i]).forEach(d=>r.push({lat:CENT[d.i].a,lng:CENT[d.i].o,t:'u'}));
+  }
+  // Always add a bright selection ring for the currently selected country
+  if (selectedNumId !== null) {
+    const iso = N2I[selectedNumId];
+    if (iso && CENT[iso]) r.push({lat:CENT[iso].a, lng:CENT[iso].o, t:'sel'});
+  }
+  return r;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BUILD POINTS (satellites + all event layers merged)
+// ═══════════════════════════════════════════════════════════════
+function buildPoints() {
+  const pts = [];
+  if (state.eventLayers.has('earthquakes')) {
+    state.liveData.earthquakes.forEach(f=>{
+      const [lng,lat,dep]=f.geometry.coordinates;
+      const mag=f.properties.mag;
+      pts.push({lat,lng,type:'eq',label:`M${mag} Earthquake`,sub:f.properties.place,extra:`Depth: ${dep}km · USGS`,color:'#ff9100',size:Math.max(0.15,mag*0.12),displayAlt:0.025});
+    });
+  }
+  if (state.eventLayers.has('disasters')) {
+    state.liveData.disasters.forEach(ev=>{
+      const c=ev.geometry?.[0]?.coordinates; if (!c) return;
+      const cols={volcanoes:'#ff6f00',severeStorms:'#7b1fa2',floods:'#0288d1',seaLakeIce:'#80deea'};
+      const col=cols[ev.categories?.[0]?.id]||'#78909c';
+      pts.push({lat:c[1],lng:c[0],type:'disaster',label:ev.categories?.[0]?.title||'Natural Event',sub:ev.title,extra:'Source: NASA EONET',color:col,size:0.2,displayAlt:0.02});
+    });
+  }
+  if (state.eventLayers.has('war')) {
+    WAR_ZONES.forEach(d=>pts.push({lat:d.lat,lng:d.lng,type:'war',label:d.name,sub:`Since ${d.since} · Est. ${d.deaths} deaths`,extra:d.note,color:'#d50000',size:0.38,displayAlt:0.05,data:d}));
+  }
+  // Note: Mercy Ships use htmlElementsData layer, not pointsData — handled by applyMercyShips()
+  document.getElementById('active-count').textContent = 'EVENTS: '+pts.length;
+  return pts;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEGEND
+// ═══════════════════════════════════════════════════════════════
+const LEGENDS = {
+  persecution:`
+    <div class="leg-item"><div class="leg-sw" style="background:#c80f0f"></div>EXTREME (81–100)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#d95a08"></div>VERY HIGH (61–80)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#c89808"></div>HIGH (41–60)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#1e3a5c;border:1px solid #2a4a6c"></div>NOT IN WWL</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">Open Doors WWL 2026 · 50 countries</div>`,
+  unreached:`
+    <div class="leg-item"><div class="leg-sw" style="background:#0a38cc"></div>&gt;99% UNREACHED</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#1a5ed4"></div>95–99% UNREACHED</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#2a82d8"></div>90–95% UNREACHED</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#4aa2de"></div>80–90% UNREACHED</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">Joshua Project 2025 · 7,188 UPGs</div>`,
+  bible:`
+    <div class="leg-item"><div class="leg-sw" style="background:#004d40"></div>TOTAL BAN (5/5)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#00695c"></div>SEVERE (4/5)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#00897b"></div>MODERATE BAN (3/5)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#26a69a"></div>SHORTAGE (2/5)</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">Wycliffe / Open Doors 2024</div>`,
+  internet:`
+    <div class="leg-item"><div class="leg-sw" style="background:#bf360c"></div>BLACKOUT (80+)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#e64a19"></div>HEAVILY CENSORED (60–79)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#ff7043"></div>SIGNIFICANT (40–59)</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">Freedom House FOTN 2024</div>`,
+  refugees:`
+    <div class="leg-item"><div class="leg-sw" style="background:#004d40"></div>CATASTROPHIC (score 9–10)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#00695c"></div>SEVERE (score 7–8)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#00897b"></div>HIGH (score 5–6)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#26a69a"></div>SIGNIFICANT (score 3–4)</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">UNHCR Global Trends 2024 · includes IDPs + refugees</div>`,
+  poverty:`
+    <div class="leg-item"><div class="leg-sw" style="background:#e65100"></div>EXTREME (70%+ below $2.15/day)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#f57c00"></div>VERY HIGH (50–69%)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#fb8c00"></div>HIGH (30–49%)</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#ffa726"></div>ELEVATED (15–29%)</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">World Bank PovcalNet / WDI 2023</div>`,
+  famine:`
+    <div class="leg-item"><div class="leg-sw" style="background:#b71c1c"></div>PHASE 5 — FAMINE / CATASTROPHE</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#c62828"></div>PHASE 4 — EMERGENCY</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#d84315"></div>PHASE 3 — CRISIS</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">FEWS NET / IPC Classification 2024–2025</div>`,
+  uscirf:`
+    <div class="leg-item"><div class="leg-sw" style="background:#b71c1c"></div>CPC — COUNTRY OF PARTICULAR CONCERN</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#d32f2f"></div>CPC (REC) — USCIRF RECOMMENDED</div>
+    <div class="leg-item"><div class="leg-sw" style="background:#e53935"></div>SWL — SPECIAL WATCH LIST</div>
+    <div style="margin-top:5px;font-size:7px;color:rgba(0,229,255,0.3)">US Comm. Int'l Religious Freedom 2025 · 30 nations</div>`,
+};
+function renderLegend(lyr) { document.getElementById('legend').innerHTML = LEGENDS[lyr]||LEGENDS.persecution; }
+
+// ═══════════════════════════════════════════════════════════════
+// INFO PANELS
+// ═══════════════════════════════════════════════════════════════
+function fmt(n) {
+  if (n>=1e9) return (n/1e9).toFixed(1)+'B'; if (n>=1e6) return (n/1e6).toFixed(1)+'M';
+  if (n>=1e3) return Math.round(n/1e3)+'K'; return n.toLocaleString();
+}
+
+function showInfo(numId) {
+  const iso=N2I[numId]; if (!iso) return;
+  const w=wMap[iso],j=jMap[iso],b=bMap[iso],net=iMap[iso],ref=refMap[iso],pov=povMap[iso],fam=famMap[iso],usc=uscrfMap[iso];
+  if (!w&&!j&&!b&&!net&&!ref&&!pov&&!fam&&!usc) return;
+  const nm=(w?.n||j?.n||b?.n||net?.n||ref?.n||pov?.n||fam?.n||usc?.n||'').toUpperCase();
+  const lc=nm.charAt(0)+nm.slice(1).toLowerCase();
+  let h=`<div id="cname">${nm}</div>`;
+  if (w) {
+    const vc=w.lv==='Extreme'?'extreme':w.lv==='Very High'?'very-high':'high';
+    h+=`<div class="dsec red">⬡ PERSECUTION STATUS</div>
+      <div class="drow"><span class="lbl">WWL RANK 2026</span><span class="val ${vc}">#${w.r} / 50</span></div>
+      <div class="drow"><span class="lbl">SCORE</span><span class="val ${vc}">${w.s} / 100</span></div>
+      <div class="drow"><span class="lbl">THREAT LEVEL</span><span class="val ${vc}">${w.lv.toUpperCase()}</span></div>
+      <div class="drow"><span class="lbl">AT-RISK CHRISTIANS</span><span class="val">${fmt(w.p)}</span></div>
+      <div class="cnotes">${w.note}</div>`;
+  }
+  if (j) {
+    h+=`<div class="dsec blue">⬡ UNREACHED PEOPLES</div>
+      <div class="drow"><span class="lbl">% IN UNREACHED PGs</span><span class="val" style="color:#42a5f5">${j.u}%</span></div>
+      <div class="drow"><span class="lbl">UNREACHED PG COUNT</span><span class="val" style="color:#42a5f5">${j.g}</span></div>
+      <div class="drow"><span class="lbl">POPULATION</span><span class="val" style="color:#42a5f5">${fmt(j.p)}</span></div>`;
+  }
+  if (b) {
+    const sc=['','MINOR SHORTAGE','SIGNIFICANT','MODERATE BAN','SEVERE','TOTAL BAN'];
+    h+=`<div class="dsec teal">⬡ BIBLE ACCESS</div>
+      <div class="drow"><span class="lbl">RESTRICTION</span><span class="val" style="color:#4db6ac">${sc[b.score]}</span></div>
+      <div class="drow"><span class="lbl">SEVERITY SCORE</span><span class="val" style="color:#4db6ac">${b.score} / 5</span></div>
+      <div class="cnotes-alt">${b.note}</div>`;
+  }
+  if (net) {
+    h+=`<div class="dsec orange">⬡ INTERNET FREEDOM</div>
+      <div class="drow"><span class="lbl">STATUS</span><span class="val" style="color:#ff7043">${net.status}</span></div>
+      <div class="drow"><span class="lbl">REPRESSION SCORE</span><span class="val" style="color:#ff7043">${net.score} / 100</span></div>
+      <div class="cnotes-alt">${net.note}</div>`;
+  }
+  if (ref) {
+    const hosted = ref.hosted ? fmt(ref.hosted*1000) : '—';
+    const origin = ref.origin ? fmt(ref.origin*1000) : '—';
+    const idp = ref.idp ? fmt(ref.idp*1000) : '—';
+    h+=`<div class="dsec green">⬡ DISPLACEMENT / REFUGEES</div>
+      <div class="drow"><span class="lbl">CRISIS SCORE</span><span class="val" style="color:#4ade80">${ref.score} / 10</span></div>
+      <div class="drow"><span class="lbl">REFUGEES FROM COUNTRY</span><span class="val" style="color:#4ade80">${origin}</span></div>
+      <div class="drow"><span class="lbl">IDPs (INTERNAL)</span><span class="val" style="color:#4ade80">${idp}</span></div>
+      <div class="drow"><span class="lbl">REFUGEES HOSTED</span><span class="val">${hosted}</span></div>
+      <div class="cnotes-alt">${ref.note}</div>`;
+  }
+  if (pov) {
+    h+=`<div class="dsec yellow">⬡ EXTREME POVERTY</div>
+      <div class="drow"><span class="lbl">BELOW $2.15/DAY</span><span class="val" style="color:#ffa726">${pov.score}%</span></div>
+      ${pov.gni ? `<div class="drow"><span class="lbl">GNI PER CAPITA</span><span class="val">$${pov.gni.toLocaleString()}</span></div>` : ''}
+      <div class="cnotes-alt">${pov.note}</div>`;
+  }
+  if (fam) {
+    const phaseLabel = ['','MINIMAL','STRESSED','CRISIS','EMERGENCY','FAMINE'][fam.phase]||'CRISIS';
+    const phaseCol = fam.phase>=5?'#ff1744':fam.phase>=4?'#ff5722':'#ff9800';
+    h+=`<div class="dsec" style="color:#ff7043">⬡ FOOD SECURITY</div>
+      <div class="drow"><span class="lbl">IPC PHASE</span><span class="val" style="color:${phaseCol}">PHASE ${fam.phase} — ${phaseLabel}</span></div>
+      <div class="drow"><span class="lbl">POPULATION AFFECTED</span><span class="val" style="color:${phaseCol}">${fmt(fam.pop)}</span></div>
+      <div class="cnotes-alt">${fam.note}</div>`;
+  }
+  if (usc) {
+    const tierLabel = usc.tier==='CPC'?'COUNTRY OF PARTICULAR CONCERN':usc.tier==='CPC_REC'?'CPC (USCIRF RECOMMENDED)':'SPECIAL WATCH LIST';
+    const tierCol = usc.tier==='CPC'?'#ef9a9a':usc.tier==='CPC_REC'?'#ef5350':'#e57373';
+    h+=`<div class="dsec red">⬡ USCIRF RELIGIOUS FREEDOM</div>
+      <div class="drow"><span class="lbl">TIER DESIGNATION</span><span class="val" style="color:${tierCol}">${tierLabel}</span></div>
+      <div class="cnotes-alt">${usc.note}</div>`;
+  }
+  h+=`<div style="margin-top:10px;padding:7px;background:rgba(0,229,255,0.03);border:1px solid rgba(0,229,255,0.12);text-align:center">
+    <div style="font-size:7px;letter-spacing:2px;color:rgba(0,229,255,0.4);margin-bottom:3px">MISSION DIRECTIVE</div>
+    <div style="font-size:9px;color:rgba(185,215,228,0.6)">Pray for breakthrough in ${lc}</div></div>`;
+  document.getElementById('country-info').innerHTML = h;
+  document.getElementById('point-info').innerHTML = '';
+  // Mirror into popup
+  const popup = document.getElementById('stat-popup');
+  document.getElementById('stat-popup-title').textContent = 'TARGET ANALYSIS';
+  document.getElementById('stat-popup-title').style.color = 'var(--cyan)';
+  document.getElementById('stat-popup-body').innerHTML = h;
+  popupPinned = true;
+  document.getElementById('btn-pin-stat').classList.add('pinned');
+  popup.style.left = '290px';
+  popup.style.bottom = '112px';
+  popup.classList.add('show');
+}
+
+function showPointInfo(d) {
+  const icons = {eq:'◈',disaster:'⬡',war:'✕',ship:'⛴',plane:'✈'};
+  const colors = {eq:'#ff9100',disaster:'#7b1fa2',war:'#d50000',ship:'#00e5ff',plane:'#f59e0b'};
+  const labels = {eq:'SEISMIC EVENT',disaster:'NATURAL EVENT',war:'ACTIVE CONFLICT',ship:'MISSION SHIP',plane:'MISSION AIRCRAFT'};
+  const col = colors[d.type]||'#b8d4e0';
+  let h=`<div style="font-family:var(--orb);font-size:10px;font-weight:700;letter-spacing:2px;color:${col};text-shadow:0 0 8px ${col}55;padding-bottom:7px;border-bottom:1px solid var(--panel-border);margin-bottom:8px">${icons[d.type]||'◎'} ${labels[d.type]||'EVENT'}</div>`;
+  h+=`<div class="drow"><span class="lbl">DESIGNATION</span><span class="val" style="font-size:8px;color:${col}">${d.label}</span></div>`;
+  if (d.sub) h+=`<div style="font-size:8px;color:rgba(180,200,215,0.7);margin:5px 0;line-height:1.6">${d.sub}</div>`;
+  if (d.extra) h+=`<div class="cnotes-alt">${d.extra}</div>`;
+  document.getElementById('country-info').innerHTML = '<div class="hint">// SELECT COUNTRY //</div>';
+  document.getElementById('point-info').innerHTML = h;
+  // Mirror into popup
+  const popup = document.getElementById('stat-popup');
+  document.getElementById('stat-popup-title').textContent = 'EVENT DETAILS';
+  document.getElementById('stat-popup-title').style.color = colors[d.type] || 'var(--cyan)';
+  document.getElementById('stat-popup-body').innerHTML = h;
+  popupPinned = true;
+  document.getElementById('btn-pin-stat').classList.add('pinned');
+  popup.style.left = '290px';
+  popup.style.bottom = '112px';
+  popup.classList.add('show');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 10/40 WINDOW — Path Coordinates
+// ═══════════════════════════════════════════════════════════════
+const PATHS_1040 = (function() {
+  const L0 = -10, L1 = 150, A = 10, B = 40;
+  const top=[], bot=[], lft=[], rgt=[];
+  for (let lng = L0; lng <= L1; lng++) { top.push([B, lng]); bot.push([A, lng]); }
+  for (let lat = A; lat <= B; lat++)   { lft.push([lat, L0]); rgt.push([lat, L1]); }
+  return [
+    { id:'top', pts:top }, { id:'bot', pts:bot },
+    { id:'lft', pts:lft }, { id:'rgt', pts:rgt },
+  ];
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// MISSION FLOW ARCS — Sending countries → Unreached fields
+// Source: Operation World / IBMR 2023 data estimates
+// Cyan end = sending country · Amber end = receiving field
+// ═══════════════════════════════════════════════════════════════
+const MISSION_ARCS = [
+  // ── USA (largest sender, ~127k workers) ──────────────────────
+  {f:'USA',          t:'Middle East & N. Africa',  slat:38,  slng:-97,  elat:27,  elng:42,   vol:4},
+  {f:'USA',          t:'Sub-Saharan Africa',        slat:38,  slng:-97,  elat:8,   elng:22,   vol:3},
+  {f:'USA',          t:'Southeast Asia',            slat:38,  slng:-97,  elat:13,  elng:102,  vol:3},
+  {f:'USA',          t:'Central Asia',              slat:38,  slng:-97,  elat:41,  elng:63,   vol:2},
+  {f:'USA',          t:'South Asia',                slat:38,  slng:-97,  elat:24,  elng:85,   vol:3},
+  {f:'USA',          t:'East Asia',                 slat:38,  slng:-97,  elat:32,  elng:114,  vol:2},
+  // ── South Korea (2nd largest sender per capita, ~23k) ────────
+  {f:'South Korea',  t:'Central Asia',              slat:37,  slng:127,  elat:41,  elng:63,   vol:3},
+  {f:'South Korea',  t:'Middle East & N. Africa',   slat:37,  slng:127,  elat:27,  elng:42,   vol:3},
+  {f:'South Korea',  t:'Southeast Asia',            slat:37,  slng:127,  elat:13,  elng:102,  vol:3},
+  {f:'South Korea',  t:'Sub-Saharan Africa',        slat:37,  slng:127,  elat:8,   elng:22,   vol:2},
+  {f:'South Korea',  t:'South Asia',                slat:37,  slng:127,  elat:24,  elng:85,   vol:2},
+  // ── Brazil (fastest-growing sender, ~34k) ────────────────────
+  {f:'Brazil',       t:'Sub-Saharan Africa',        slat:-15, slng:-47,  elat:8,   elng:22,   vol:3},
+  {f:'Brazil',       t:'Middle East & N. Africa',   slat:-15, slng:-47,  elat:27,  elng:42,   vol:2},
+  {f:'Brazil',       t:'South Asia',                slat:-15, slng:-47,  elat:24,  elng:85,   vol:2},
+  // ── UK ────────────────────────────────────────────────────────
+  {f:'UK',           t:'Sub-Saharan Africa',        slat:52,  slng:-1,   elat:8,   elng:22,   vol:2},
+  {f:'UK',           t:'Middle East & N. Africa',   slat:52,  slng:-1,   elat:27,  elng:42,   vol:2},
+  {f:'UK',           t:'South Asia',                slat:52,  slng:-1,   elat:24,  elng:85,   vol:2},
+  // ── Germany ───────────────────────────────────────────────────
+  {f:'Germany',      t:'Middle East & N. Africa',   slat:51,  slng:10,   elat:27,  elng:42,   vol:2},
+  {f:'Germany',      t:'Sub-Saharan Africa',        slat:51,  slng:10,   elat:8,   elng:22,   vol:2},
+  // ── Canada ────────────────────────────────────────────────────
+  {f:'Canada',       t:'Middle East & N. Africa',   slat:60,  slng:-96,  elat:27,  elng:42,   vol:2},
+  {f:'Canada',       t:'Sub-Saharan Africa',        slat:60,  slng:-96,  elat:8,   elng:22,   vol:2},
+  // ── Australia ─────────────────────────────────────────────────
+  {f:'Australia',    t:'Southeast Asia',            slat:-25, slng:133,  elat:13,  elng:102,  vol:3},
+  {f:'Australia',    t:'Pacific Islands',           slat:-25, slng:133,  elat:-5,  elng:160,  vol:2},
+  {f:'Australia',    t:'South Asia',                slat:-25, slng:133,  elat:24,  elng:85,   vol:2},
+  // ── India (growing Global South sender) ──────────────────────
+  {f:'India',        t:'Middle East & N. Africa',   slat:20,  slng:77,   elat:27,  elng:42,   vol:2},
+  {f:'India',        t:'Central Asia',              slat:20,  slng:77,   elat:41,  elng:63,   vol:2},
+  // ── Nigeria (largest African sender) ─────────────────────────
+  {f:'Nigeria',      t:'North Africa',              slat:9,   slng:8,    elat:22,  elng:15,   vol:2},
+  {f:'Nigeria',      t:'Middle East',               slat:9,   slng:8,    elat:27,  elng:42,   vol:1},
+  // ── China (house church diaspora networks) ───────────────────
+  {f:'China',        t:'Southeast Asia',            slat:35,  slng:105,  elat:13,  elng:102,  vol:2},
+  {f:'China',        t:'Central Asia',              slat:35,  slng:105,  elat:41,  elng:63,   vol:2},
+  {f:'China',        t:'Middle East',               slat:35,  slng:105,  elat:27,  elng:42,   vol:1},
+  // ── Philippines ───────────────────────────────────────────────
+  {f:'Philippines',  t:'Middle East',               slat:13,  slng:122,  elat:27,  elng:42,   vol:2},
+  {f:'Philippines',  t:'South Asia',                slat:13,  slng:122,  elat:24,  elng:85,   vol:1},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// HEATMAP — Color Functions + Dataset Builder
+// ═══════════════════════════════════════════════════════════════
+const HMAP_COLORS = {
+  persecution: t => `rgba(244,63,94,${Math.pow(t,0.5)*0.76})`,
+  unreached:   t => `rgba(59,130,246,${Math.pow(t,0.5)*0.76})`,
+  bible:       t => `rgba(45,212,191,${Math.pow(t,0.5)*0.72})`,
+  internet:    t => `rgba(251,146,60,${Math.pow(t,0.5)*0.72})`,
+  refugees:    t => `rgba(34,211,238,${Math.pow(t,0.5)*0.72})`,
+  poverty:     t => `rgba(245,158,11,${Math.pow(t,0.5)*0.72})`,
+  famine:      t => `rgba(220,38,38,${Math.pow(t,0.5)*0.76})`,
+  uscirf:      t => `rgba(239,68,68,${Math.pow(t,0.5)*0.76})`,
+};
+
+// Returns a FLAT array of {lat,lng,weight} points for the heatmap layer.
+// heatmapColorFn is set separately on the globe instance before calling heatmapsData.
+function getHeatmapPoints(lyr) {
+  if (!lyr) return [];
+  const pts = [];
+  if      (lyr==='persecution')  WWL.forEach(d=>{if(CENT[d.i])pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:d.s/100});});
+  else if (lyr==='unreached')    JP.forEach(d=>{if(CENT[d.i])pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:d.u/100});});
+  else if (lyr==='bible')        BIBLE.forEach(d=>{if(CENT[d.i])pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:d.score/5});});
+  else if (lyr==='internet')     INTERNET.forEach(d=>{if(CENT[d.i])pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:d.score/100});});
+  else if (lyr==='refugees')     REFUGEES.forEach(d=>{if(CENT[d.i])pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:d.score/10});});
+  else if (lyr==='poverty')      POVERTY.forEach(d=>{if(CENT[d.i])pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:d.score/100});});
+  else if (lyr==='famine')       FAMINE.forEach(d=>{if(CENT[d.i])pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:Math.max(0,(d.phase-2)/3)});});
+  else if (lyr==='uscirf')       USCIRF.forEach(d=>{if(CENT[d.i]){const w=d.tier==='CPC'?1:d.tier==='CPC_REC'?0.7:0.45;pts.push({lat:CENT[d.i].a,lng:CENT[d.i].o,weight:w});}});
+  return pts;
+}
+
+function applyHeatmap(lyr) {
+  try {
+    if (!state.showHeatmap || !lyr) { globe.heatmapsData([]); return; }
+    const colorFn = HMAP_COLORS[lyr] || HMAP_COLORS.persecution;
+    globe.heatmapColorFn(colorFn).heatmapsData(getHeatmapPoints(lyr));
+  } catch(e) { console.warn('[heatmap apply]', e); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GLOBE INITIALIZATION
+// ═══════════════════════════════════════════════════════════════
+let geo, globe;
+const globeEl = document.getElementById('globe-el');
+
+globe = Globe()(globeEl)
+  .globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe@2.32.0/example/img/earth-dark.jpg')
+  .bumpImageUrl('https://cdn.jsdelivr.net/npm/three-globe@2.32.0/example/img/earth-topology.png')
+  .backgroundImageUrl('https://cdn.jsdelivr.net/npm/three-globe@2.32.0/example/img/night-sky.png')
+  .showAtmosphere(true)
+  .atmosphereColor('#00b8ff')
+  .atmosphereAltitude(0.14)
+  .showGraticules(false);
+
+globe.controls().autoRotate = true;
+globe.controls().autoRotateSpeed = 0.3;
+globe.controls().enableDamping = true;
+globe.pointOfView({lat:22,lng:52,altitude:2.2});
+
+setTimeout(()=>{
+  try{const m=globe.globeMaterial();if(m?.color?.setHex)m.color.setHex(0x0d1a2e);}catch(e){}
+}, 500);
+
+// ── Heatmap accessors — wrapped in try/catch so a missing API never breaks core
+try {
+  globe
+    .heatmapPointLat('lat')
+    .heatmapPointLng('lng')
+    .heatmapPointWeight('weight')
+    .heatmapBandwidth(5)
+    .heatmapMaxVal(1)
+    .heatmapTopAltitude(0.06);
+} catch(e) { console.warn('[heatmap init]', e); }
+
+// ── Path accessors — 10/40 Window belt + vessel/aircraft trails
+// Trail paths: gradient array (1 color per waypoint), oldest→newest = transparent→solid
+try {
+  globe
+    .pathPoints(d => d.pts)
+    .pathColor(d => {
+      if (d._trail) {
+        // Build per-point gradient: transparent at oldest end → solid at newest
+        return d.pts.map((_, i) => {
+          const t = i / Math.max(1, d.pts.length - 1);
+          const a = Math.pow(t, 1.6) * (d.type === 'ship' ? 0.88 : 0.78);
+          return hexA(d.color, a);
+        });
+      }
+      return d.id==='top'||d.id==='bot' ? 'rgba(245,158,11,0.55)' : 'rgba(245,158,11,0.3)';
+    })
+    .pathStroke(d => d._trail ? (d.type === 'ship' ? 1.8 : 1.3) : 1.5)
+    .pathDashLength(d => d._trail ? 1 : 0.05)   // 1 = solid continuous line
+    .pathDashGap(d => d._trail ? 0 : 0.025)
+    .pathDashAnimateTime(d => d._trail ? 0 : 4000)
+    .pathTransitionDuration(600);
+} catch(e) { console.warn('[path init]', e); }
+
+// ── Arc accessors for Mission Flow arrows
+// One distinct color per sending country, solid (no animation)
+const ARC_COLORS = {
+  'USA':          'rgba(0,212,255,0.82)',    // cyan
+  'South Korea':  'rgba(74,222,128,0.82)',   // green
+  'Brazil':       'rgba(163,230,53,0.82)',   // lime
+  'UK':           'rgba(168,85,247,0.82)',   // purple
+  'Germany':      'rgba(96,165,250,0.82)',   // blue
+  'Canada':       'rgba(45,212,191,0.82)',   // teal
+  'Australia':    'rgba(251,146,60,0.82)',   // orange
+  'India':        'rgba(251,191,36,0.82)',   // amber
+  'Nigeria':      'rgba(244,114,182,0.82)',  // pink
+  'China':        'rgba(248,113,113,0.82)',  // red
+  'Philippines':  'rgba(167,139,250,0.82)',  // violet
+};
+try {
+  globe
+    .arcStartLat(d => d.slat)
+    .arcStartLng(d => d.slng)
+    .arcEndLat(d => d.elat)
+    .arcEndLng(d => d.elng)
+    .arcColor(d => ARC_COLORS[d.f] || 'rgba(200,200,200,0.7)')
+    .arcAltitude(d => {
+      const dlat = d.elat - d.slat, dlng = d.elng - d.slng;
+      const dist = Math.sqrt(dlat*dlat + dlng*dlng);
+      return Math.min(0.6, 0.18 + dist * 0.0022);
+    })
+    .arcStroke(d => d.vol === 4 ? 1.4 : d.vol === 3 ? 1.0 : d.vol === 2 ? 0.7 : 0.45)
+    .arcDashLength(0.35)
+    .arcDashGap(0.15)
+    .arcDashAnimateTime(2800)
+    .arcTransitionDuration(800)
+    .arcsData([]);
+} catch(e) { console.warn('[arc init]', e); }
+
+// ── HTML Elements (ships + planes)
+// ── Data age helper ──────────────────────────────────────────────────────────
+// Returns human-readable string like "2 min ago", "47 min ago", "3 hr ago", or
+// "No live data received" if ms is null/undefined.
+function dataAge(ms) {
+  if (!ms) return null;
+  const sec = Math.floor((Date.now() - ms) / 1000);
+  if (sec < 90)   return `${sec}s ago`;
+  if (sec < 3600) return `${Math.floor(sec/60)} min ago`;
+  if (sec < 86400) return `${Math.floor(sec/3600)} hr ago`;
+  return `${Math.floor(sec/86400)} days ago`;
+}
+
+function buildShipEl(d) {
+  const col = d.color || '#00e5ff';
+  const isAISTracked = LIVE_TRACKING.AIS_MMSIS.includes(d.mmsi);
+  const hasKey = LIVE_TRACKING.AISSTREAM_KEY !== 'YOUR_KEY_HERE';
+
+  // Live signal badge
+  const liveBadge = d._liveAIS
+    ? `<span class="tt-live-badge ais"><span class="live-dot ais"></span>AIS LIVE · ${d._lastUpdated||''}</span>`
+    : isAISTracked && hasKey
+      ? `<span class="tt-live-badge static"><span class="live-dot off"></span>AIS CONNECTED — AWAITING SIGNAL</span>`
+      : isAISTracked
+        ? `<span class="tt-live-badge static"><span class="live-dot off"></span>AIS READY — NO KEY SET</span>`
+        : `<span class="tt-live-badge static"><span class="live-dot off"></span>STATIC POSITION · Jan 2025</span>`;
+
+  // Last live data row
+  const age = dataAge(d._lastDataMs);
+  const lastDataRow = isAISTracked
+    ? `<div class="ship-tt-row" style="border-top:1px solid ${col}22;margin-top:4px;padding-top:4px">
+         <span class="ship-tt-lbl">LAST AIS FIX</span>
+         <span class="ship-tt-val" style="color:${age ? '#4ade80' : 'rgba(180,200,215,0.5)'}">${age || 'None this session'}</span>
+       </div>` : '';
+
+  const speedRow = d.sog != null
+    ? `<div class="ship-tt-row"><span class="ship-tt-lbl">SOG</span><span class="ship-tt-val">${d.sog.toFixed(1)} kts</span></div>` : '';
+
+  // Schedule / route section
+  const scheduleBlock = (d.schedule || d.routes || d.nextPort) ? `
+    <div style="margin-top:6px;padding-top:5px;border-top:1px solid ${col}22">
+      <div style="font-size:7px;letter-spacing:2px;color:${col}99;margin-bottom:3px">DEPLOYMENT SCHEDULE</div>
+      ${d.nextPort ? `<div class="ship-tt-row"><span class="ship-tt-lbl">NEXT PORT</span><span class="ship-tt-val" style="font-size:8px">${d.nextPort}</span></div>` : ''}
+      ${d.schedule ? `<div style="font-size:8px;color:rgba(180,200,215,0.7);margin:3px 0;line-height:1.5">${d.schedule}</div>` : ''}
+      ${d.routes ? `<div class="ship-tt-row"><span class="ship-tt-lbl">ROUTES</span><span class="ship-tt-val" style="font-size:7.5px;color:rgba(180,200,215,0.6)">${d.routes}</span></div>` : ''}
+    </div>` : '';
+
+  // Tracking transparency note
+  const trackNote = d.trackingNote
+    ? `<div style="font-size:7px;color:rgba(180,200,215,0.4);margin-top:4px;line-height:1.4;font-style:italic">${d.trackingNote}</div>` : '';
+
+  const el = document.createElement('div');
+  el.className = 'ship-marker';
+  el.innerHTML = `
+    <div class="ship-ping" style="background:${col}2e"></div>
+    <div class="ship-ping2" style="background:${col}1e"></div>
+    <div class="ship-icon" style="filter:drop-shadow(0 0 6px ${col}ee) drop-shadow(0 0 12px ${col}77)">⛴</div>
+    <div class="ship-label" style="color:${col};text-shadow:0 0 8px ${col}cc">${d.name.replace(' ','<br>')}</div>
+    <div class="ship-tooltip" style="border-color:${col}55">
+      <div class="ship-tt-name" style="color:${col}">${d.name}</div>
+      <div class="ship-tt-row"><span class="ship-tt-lbl">ORG</span><span class="ship-tt-val">${d.org}</span></div>
+      <div class="ship-tt-row"><span class="ship-tt-lbl">STATUS</span><span class="ship-tt-val">${d.status}</span></div>
+      <div class="ship-tt-row"><span class="ship-tt-lbl">PORT / AREA</span><span class="ship-tt-val">${d.port}</span></div>
+      ${d.capacity!=='N/A'?`<div class="ship-tt-row"><span class="ship-tt-lbl">CAPACITY</span><span class="ship-tt-val">${d.capacity}</span></div>`:''}
+      ${speedRow}
+      ${d.imo?`<div class="ship-tt-row"><span class="ship-tt-lbl">IMO · MMSI</span><span class="ship-tt-val">${d.imo} · ${d.mmsi||'—'}</span></div>`:''}
+      ${lastDataRow}
+      ${liveBadge}
+      ${scheduleBlock}
+      ${trackNote}
+      <div class="ship-tt-note">${d.note.slice(0,140)}…</div>
+    </div>`;
+  return el;
+}
+
+function buildPlaneEl(d) {
+  const col = d.color || '#f59e0b';
+  const isJaars = d.org && d.org.includes('JAARS');
+  const isDC8 = d.reg === 'N782SP';
+
+  // Live signal badge
+  const liveBadge = isDC8
+    ? d._live && !d._onGround
+      ? `<span class="tt-live-badge plane"><span class="live-dot plane"></span>ADS-B LIVE · ${d._lastUpdated||''}</span>`
+      : d._lastCheckMs
+        ? `<span class="tt-live-badge static"><span class="live-dot off"></span>ON GROUND / NO SIGNAL · last checked ${dataAge(d._lastCheckMs)}</span>`
+        : `<span class="tt-live-badge static"><span class="live-dot off"></span>OPENSKY POLLING — awaiting first check</span>`
+    : `<span class="tt-live-badge static"><span class="live-dot off"></span>STATIC HUB POSITION · no live tracking</span>`;
+
+  // Last live data rows
+  const age = dataAge(d._lastDataMs);
+  const checkAge = dataAge(d._lastCheckMs);
+  const lastDataRow = isDC8 ? `
+    <div style="border-top:1px solid ${col}22;margin-top:4px;padding-top:4px">
+      <div class="plane-tt-row">
+        <span class="plane-tt-lbl">LAST ADS-B FIX</span>
+        <span class="plane-tt-val" style="color:${age ? '#4ade80' : 'rgba(180,200,215,0.45)'}">${age || 'None this session'}</span>
+      </div>
+      <div class="plane-tt-row">
+        <span class="plane-tt-lbl">LAST OPENSKY CHECK</span>
+        <span class="plane-tt-val" style="color:rgba(180,200,215,0.55)">${checkAge || 'Not yet polled'}</span>
+      </div>
+    </div>` : '';
+
+  const flightRow = isDC8 && d._live && !d._onGround
+    ? `<div class="plane-tt-row"><span class="plane-tt-lbl">SPD / ALT</span><span class="plane-tt-val">${d._speed||'—'} · ${d._altitude||'—'}</span></div>` : '';
+
+  // Schedule / service area section
+  const scheduleBlock = (d.schedule || d.serviceArea || d.routes) ? `
+    <div style="margin-top:6px;padding-top:5px;border-top:1px solid ${col}22">
+      <div style="font-size:7px;letter-spacing:2px;color:${col}99;margin-bottom:3px">MISSION SCHEDULE</div>
+      ${d.serviceArea ? `<div class="plane-tt-row"><span class="plane-tt-lbl">SERVES</span><span class="plane-tt-val" style="font-size:7.5px">${d.serviceArea}</span></div>` : ''}
+      ${d.schedule ? `<div style="font-size:8px;color:rgba(180,200,215,0.7);margin:3px 0;line-height:1.5">${d.schedule}</div>` : ''}
+      ${d.routes ? `<div class="plane-tt-row"><span class="plane-tt-lbl">ROUTES</span><span class="plane-tt-val" style="font-size:7.5px;color:rgba(180,200,215,0.6)">${d.routes}</span></div>` : ''}
+    </div>` : '';
+
+  // Tracking transparency note
+  const trackNote = d.trackingNote
+    ? `<div style="font-size:7px;color:rgba(180,200,215,0.4);margin-top:4px;line-height:1.4;font-style:italic">${d.trackingNote}</div>` : '';
+
+  const el = document.createElement('div');
+  el.className = 'plane-marker';
+  el.innerHTML = `
+    <div class="plane-ping" style="background:${col}30"></div>
+    <div class="plane-ping2" style="background:${col}20"></div>
+    <div class="plane-icon${isJaars?' jaars':''}" style="filter:drop-shadow(0 0 6px ${col}f0) drop-shadow(0 0 14px ${col}80)">✈</div>
+    <div class="plane-label${isJaars?' jaars':''}" style="color:${col};text-shadow:0 0 8px ${col}cc">${d.name.split(' ').slice(0,3).join('<br>')}</div>
+    <div class="plane-tooltip" style="border-color:${col}55">
+      <div class="plane-tt-name${isJaars?' jaars':''}" style="color:${col}">${d.name}</div>
+      <div class="plane-tt-row"><span class="plane-tt-lbl">ORG</span><span class="plane-tt-val">${d.org}</span></div>
+      <div class="plane-tt-row"><span class="plane-tt-lbl">STATUS</span><span class="plane-tt-val">${d.status}</span></div>
+      <div class="plane-tt-row"><span class="plane-tt-lbl">BASE</span><span class="plane-tt-val">${d.base}</span></div>
+      <div class="plane-tt-row"><span class="plane-tt-lbl">FLEET</span><span class="plane-tt-val">${d.type}</span></div>
+      ${flightRow}
+      ${isDC8?`<div class="plane-tt-row"><span class="plane-tt-lbl">REG / ICAO</span><span class="plane-tt-val">N782SP · a84008</span></div>`:''}
+      ${lastDataRow}
+      ${liveBadge}
+      ${scheduleBlock}
+      ${trackNote}
+      <div class="plane-tt-note">${d.note.slice(0,140)}…</div>
+    </div>`;
+  return el;
+}
+try {
+  globe
+    .htmlElementsData([])
+    .htmlLat(d => d.lat)
+    .htmlLng(d => d.lng)
+    .htmlAltitude(d => d._type === 'plane' ? 0.06 : 0.04)
+    .htmlElement(d => d._type === 'plane' ? buildPlaneEl(d) : buildShipEl(d));
+} catch(e) { console.warn('[html elements init]', e); }
+
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r=>r.json())
+  .then(topo=>{
+    geo = topojson.feature(topo, topo.objects.countries);
+    // Ensure the initial active toggle matches state
+    if (state.countryLayer) {
+      document.getElementById('tog-cl-'+state.countryLayer)?.classList.add('on');
+    }
+    applyCountryLayer(state.countryLayer);
+  });
+
+// ═══════════════════════════════════════════════════════════════
+// APPLY LAYERS
+// ═══════════════════════════════════════════════════════════════
+function applyCountryLayer(lyr) {
+  if (!geo) return;
+  globe
+    .polygonsData(geo.features)
+    .polygonCapColor(f=>{
+      const nid=parseInt(f.id);
+      if(nid===selectedNumId) return 'rgba(0,220,255,0.55)'; // cyan selection highlight
+      return capColor(lyr ? getColor(nid,lyr) : '#1a3452');
+    })
+    .polygonSideColor(f=>lyr ? getSide(N2I[parseInt(f.id)],lyr) : 'rgba(30,90,150,0.2)')
+    .polygonStrokeColor(()=>'#00e5ff')
+    .polygonAltitude(f=>lyr ? getAlt(parseInt(f.id),lyr) : 0.01)
+    .polygonLabel(f=>getLabel(parseInt(f.id)))
+    .onPolygonClick(f=>{globe.controls().autoRotate=false;selectCountry(parseInt(f.id));})
+    .onPolygonHover(f=>{globeEl.style.cursor=f?'crosshair':'default';})
+    .ringsData(lyr ? getRings(lyr) : [])
+    .ringLat(d=>d.lat).ringLng(d=>d.lng)
+    .ringColor(d=>t=>{
+      if(d.t==='p') return `rgba(255,23,68,${1-t})`;
+      if(d.t==='u') return `rgba(0,150,255,${1-t})`;
+      if(d.t==='b') return `rgba(0,200,180,${1-t})`;
+      if(d.t==='net') return `rgba(255,100,50,${1-t})`;
+      if(d.t==='ref') return `rgba(0,180,150,${1-t})`;
+      if(d.t==='pov') return `rgba(245,127,23,${1-t})`;
+      if(d.t==='fam') return `rgba(183,28,28,${1-t})`;
+      if(d.t==='usc') return `rgba(183,28,28,${1-t})`;
+      if(d.t==='sel') return `rgba(0,220,255,${(1-t)*0.95})`;
+      return `rgba(200,50,210,${1-t})`;
+    })
+    .ringMaxRadius(4).ringPropagationSpeed(1.9).ringRepeatPeriod(850).ringAltitude(0.003);
+  renderLegend(lyr);
+  // Refresh heatmap bloom for active layer
+  applyHeatmap(lyr);
+  const labels={persecution:'PERSECUTION INDEX',unreached:'UNREACHED PEOPLES',bible:'BIBLE SHORTAGE',internet:'INTERNET BLACKOUT',refugees:'REFUGEE CRISIS',poverty:'EXTREME POVERTY',famine:'FAMINE / FOOD CRISIS',uscirf:'USCIRF RELIG. FREEDOM'};
+  document.getElementById('layer-status').textContent = lyr ? 'OVERLAY: '+(labels[lyr]||lyr.toUpperCase()) : 'OVERLAY: NONE';
+}
+
+function applyEventPoints() {
+  const pts = buildPoints();
+  globe
+    .pointsData(pts)
+    .pointLat(d=>d.lat).pointLng(d=>d.lng)
+    .pointColor(d=>d.color)
+    .pointAltitude(d=>d.displayAlt||0.02)
+    .pointRadius(d=>d.size)
+    .pointLabel(d=>`<div class="gt"><div class="gt-name">${d.label}</div><div class="gt-row"><span class="gt-val" style="font-size:8px">${d.sub||''}</span></div></div>`)
+    .onPointClick(d=>{globe.controls().autoRotate=false;showPointInfo(d);});
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LAYER SWITCHING
+// ═══════════════════════════════════════════════════════════════
+const COUNTRY_LAYER_KEYS = ['persecution','unreached','bible','internet','refugees','poverty','famine','uscirf'];
+
+function toggleCountryLayer(key) {
+  if (state.countryLayer === key) {
+    // Toggle OFF — clear the active country layer
+    state.countryLayer = null;
+    document.getElementById('tog-cl-'+key)?.classList.remove('on');
+    applyCountryLayer(null);
+  } else {
+    // Turn off any previously active country layer
+    if (state.countryLayer) {
+      document.getElementById('tog-cl-'+state.countryLayer)?.classList.remove('on');
+    }
+    // Turn on the selected layer
+    state.countryLayer = key;
+    document.getElementById('tog-cl-'+key)?.classList.add('on');
+    applyCountryLayer(key);
+  }
+}
+
+function toggleEvent(key) {
+  const tog = document.getElementById('tog-'+key);
+  const badge = document.getElementById('ct-'+key);
+  const tsEl = document.getElementById('ts-'+key);
+  const staticCounts = {
+    war: WAR_ZONES.length,
+    ships: MISSION_SHIPS.length,
+    planes: MISSION_PLANES.filter(p=>p.active).length,
+  };
+
+  if (state.eventLayers.has(key)) {
+    // ── TURNING OFF ──────────────────────────────────────────
+    state.eventLayers.delete(key);
+    if (tog) tog.classList.remove('on');
+    if (badge) { badge.textContent='—'; badge.className='li-badge'; }
+    if (key==='earthquakes') {
+      clearInterval(_eqInterval); _eqInterval=null;
+      clearInterval(_eqCountTimer); _eqCountTimer=null;
+      const el=document.getElementById('eq-next'); if(el) el.textContent='';
+    }
+    if (key==='disasters') {
+      clearInterval(_disInterval); _disInterval=null;
+      clearInterval(_disCountTimer); _disCountTimer=null;
+      const el=document.getElementById('dis-next'); if(el) el.textContent='';
+    }
+    if (key==='ships')  stopAISStream();
+    if (key==='planes') stopOpenSkyPolling();
+  } else {
+    // ── TURNING ON ───────────────────────────────────────────
+    state.eventLayers.add(key);
+    if (tog) tog.classList.add('on');
+    if (staticCounts[key]!==undefined && badge) {
+      badge.textContent = staticCounts[key];
+      badge.className = 'li-badge live';
+    }
+    if (key==='earthquakes') {
+      fetchEarthquakes();
+      _eqInterval = setInterval(fetchEarthquakes, LIVE_TRACKING.EQ_INTERVAL_MS);
+      _eqCountTimer = startCountdown('eq-next', LIVE_TRACKING.EQ_INTERVAL_MS/1000, fetchEarthquakes);
+    }
+    if (key==='disasters') {
+      fetchEONET();
+      _disInterval = setInterval(fetchEONET, LIVE_TRACKING.EONET_INTERVAL_MS);
+      _disCountTimer = startCountdown('dis-next', LIVE_TRACKING.EONET_INTERVAL_MS/1000, fetchEONET);
+    }
+    if (key==='disasters' && state.liveData.disasters.length && badge)  { badge.textContent=state.liveData.disasters.length; badge.className='li-badge live'; }
+    if (key==='earthquakes' && state.liveData.earthquakes.length && badge) { badge.textContent=state.liveData.earthquakes.length; badge.className='li-badge live'; }
+    if (key==='ships')  initAISStream();
+    if (key==='planes') initOpenSkyPolling();
+  }
+  // Ships + planes use the HTML elements layer; all others use pointsData
+  if (key === 'ships' || key === 'planes') {
+    applyHtmlLayers();
+  } else {
+    applyEventPoints();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE DATA
+// ═══════════════════════════════════════════════════════════════
+function setStatus(msg) { document.getElementById('status-msg').textContent = msg; }
+
+function fetchEarthquakes() {
+  setStatus('FETCHING USGS EARTHQUAKE FEED...');
+  fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson')
+    .then(r=>r.json())
+    .then(data=>{
+      state.liveData.earthquakes = data.features||[];
+      const n = state.liveData.earthquakes.length;
+      const badge=document.getElementById('ct-earthquakes');
+      const ts=document.getElementById('ts-earthquakes');
+      if (badge) { badge.textContent=n; badge.className='li-badge live'; }
+      if (ts) ts.textContent=new Date().toISOString().slice(11,19)+'Z';
+      applyEventPoints();
+      setStatus(`USGS: ${n} M4.5+ SEISMIC EVENTS THIS WEEK`);
+    })
+    .catch(()=>setStatus('USGS FEED UNAVAILABLE'));
+}
+
+function fetchEONET() {
+  setStatus('FETCHING NASA EONET EVENTS...');
+  fetch('https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=200')
+    .then(r=>r.json())
+    .then(data=>{
+      const events = data.events||[];
+      state.liveData.disasters = events;
+      const db=document.getElementById('ct-disasters');
+      const dts=document.getElementById('ts-disasters');
+      const now=new Date().toISOString().slice(11,19)+'Z';
+      if (db) { db.textContent=state.liveData.disasters.length; db.className='li-badge live'; }
+      if (dts) dts.textContent=now;
+      applyEventPoints();
+      setStatus(`NASA EONET: ${events.length} ACTIVE EVENTS LOADED`);
+    })
+    .catch(()=>setStatus('EONET FEED UNAVAILABLE'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COUNTDOWN TIMERS — show "refresh in X:XX" in the source line
+// ═══════════════════════════════════════════════════════════════
+function startCountdown(elId, seconds, onComplete) {
+  let s = seconds;
+  const el = document.getElementById(elId);
+  const tick = () => {
+    if (!el) return;
+    const m = Math.floor(s / 60), sec = s % 60;
+    el.textContent = ` · refresh in ${m}:${String(sec).padStart(2,'0')}`;
+    if (s <= 0) { onComplete(); s = seconds; } else s--;
+  };
+  tick();
+  return setInterval(tick, 1000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AIS STREAM — WebSocket live ship tracking via aisstream.io
+// ═══════════════════════════════════════════════════════════════
+function initAISStream() {
+  if (LIVE_TRACKING.AISSTREAM_KEY === 'YOUR_KEY_HERE') {
+    setStatus('AIS: Paste your aisstream.io key into LIVE_TRACKING.AISSTREAM_KEY to enable live ship tracking');
+    const dot = document.getElementById('ais-dot');
+    if (dot) { dot.className='live-dot off'; }
+    return;
+  }
+  if (_aisWS && _aisWS.readyState < 2) return; // already open/connecting
+  setStatus('AIS: Connecting to aisstream.io…');
+  try {
+    _aisWS = new WebSocket('wss://stream.aisstream.io/v0/stream');
+  } catch(e) { setStatus('AIS: WebSocket not supported'); return; }
+
+  _aisWS.onopen = () => {
+    _aisWS.send(JSON.stringify({
+      APIKey: LIVE_TRACKING.AISSTREAM_KEY,
+      BoundingBoxes: [[[-90,-180],[90,180]]],
+      FilterMessageTypes: ['PositionReport'],
+      FiltersShipMMSI: LIVE_TRACKING.AIS_MMSIS,
+    }));
+    setStatus('AIS: Connected — tracking 5 vessels live');
+    const dot = document.getElementById('ais-dot');
+    if (dot) { dot.className='live-dot ais'; }
+    clearTimeout(_aisReconnectTimer);
+  };
+
+  _aisWS.onmessage = (evt) => {
+    try {
+      const msg = JSON.parse(evt.data);
+      const mmsi = String(msg?.MetaData?.MMSI);
+      const ship = MISSION_SHIPS.find(s => s.mmsi === mmsi);
+      if (!ship) return;
+      const pos = msg?.Message?.PositionReport;
+      if (!pos) return;
+      const lat = pos.Latitude, lng = pos.Longitude;
+      if (lat == null || lng == null || (lat === 0 && lng === 0)) return;
+      // Ignore micro-movements (noise)
+      if (Math.abs(ship.lat - lat) < 0.004 && Math.abs(ship.lng - lng) < 0.004) return;
+      ship.lat = lat; ship.lng = lng;
+      ship.sog = pos.Sog; ship.cog = pos.Cog;
+      ship._liveAIS = true;
+      ship._lastDataMs = Date.now();
+      const now = new Date().toISOString().slice(11,16)+'Z';
+      ship.status = `AIS LIVE · ${now}`;
+      ship._lastUpdated = now;
+      // Push to trail (keep last 24 pts)
+      const trail = TRAILS.find(t => t.name === ship.name);
+      if (trail) { trail.pts.push({lat,lng}); if (trail.pts.length > 24) trail.pts.shift(); }
+      // Update panel timestamp
+      const tsEl = document.getElementById('ts-ships');
+      if (tsEl) tsEl.textContent = now;
+      if (state.eventLayers.has('ships')) { applyHtmlLayers(); }
+    } catch(e) { console.warn('[AIS msg]', e); }
+  };
+
+  _aisWS.onclose = () => {
+    const dot = document.getElementById('ais-dot');
+    if (dot) dot.className = 'live-dot off';
+    if (state.eventLayers.has('ships')) {
+      setStatus('AIS: Connection lost — reconnecting in 30s…');
+      _aisReconnectTimer = setTimeout(initAISStream, LIVE_TRACKING.AIS_RECONNECT_MS);
+    }
+  };
+  _aisWS.onerror = () => setStatus('AIS: WebSocket error');
+}
+
+function stopAISStream() {
+  clearTimeout(_aisReconnectTimer);
+  if (_aisWS) { try { _aisWS.close(); } catch(e){} _aisWS = null; }
+  const dot = document.getElementById('ais-dot');
+  if (dot) dot.className = 'live-dot off';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// OPENSKY NETWORK — Free ADS-B polling for DC-8 every 10 min
+// No API key required. CORS-enabled.
+// ═══════════════════════════════════════════════════════════════
+function pollOpenSky() {
+  const dc8 = MISSION_PLANES.find(p => p.reg === 'N782SP');
+  if (!dc8) return;
+  const dot = document.getElementById('plane-dot');
+  fetch(`https://opensky-network.org/api/states/all?icao24=${LIVE_TRACKING.DC8_ICAO}`)
+    .then(r => r.json())
+    .then(data => {
+      const now = new Date().toISOString().slice(11,16)+'Z';
+      const tsEl = document.getElementById('ts-planes');
+      if (tsEl) tsEl.textContent = now;
+      const states = data?.states;
+      dc8._lastCheckMs = Date.now();
+      if (!states || states.length === 0) {
+        // Not visible — on ground or out of ADS-B coverage
+        dc8._live = false; dc8._onGround = true;
+        dc8._lastUpdated = now;
+        dc8.status = `On Ground / No Signal · ${now}`;
+        if (dot) dot.className = 'live-dot off';
+        setStatus(`OpenSky: DC-8 — on ground or out of coverage`);
+      } else {
+        // State vector: [icao24, callsign, origin, time_pos, last_contact, lng, lat, geo_alt, on_ground, velocity, track, vert_rate, ...]
+        const s = states[0];
+        const lng = s[5], lat = s[6], onGround = s[8];
+        const velocity = s[9], altitude = s[7], track = s[10];
+        if (lat != null && lng != null) {
+          dc8.lat = lat; dc8.lng = lng;
+          dc8._live = true; dc8._onGround = onGround;
+          dc8._lastDataMs = Date.now();
+          dc8._lastUpdated = now;
+          // Grow trail in real-time
+          const trail = TRAILS.find(t => t.name === dc8.name);
+          if (trail) { trail.pts.push({lat,lng}); if (trail.pts.length > 48) trail.pts.shift(); }
+          if (onGround) {
+            dc8.status = `On Ground · ${now}`;
+            if (dot) dot.className = 'live-dot off';
+          } else {
+            const spd = velocity ? `${Math.round(velocity * 1.944)} kts` : '—';
+            const alt = altitude ? `FL${Math.round(altitude * 3.281 / 100)}` : '—';
+            dc8.status = `AIRBORNE · ${spd} · ${alt} · ${now}`;
+            dc8._speed = spd; dc8._altitude = alt; dc8._track = track;
+            if (dot) dot.className = 'live-dot plane';
+          }
+          if (state.eventLayers.has('planes')) { applyHtmlLayers(); applyPaths(); }
+          setStatus(`OpenSky: DC-8 updated · ${dc8.status}`);
+        }
+      }
+    })
+    .catch(() => {
+      setStatus('OpenSky: Query failed — will retry next interval');
+      if (dot) dot.className = 'live-dot off';
+    });
+}
+
+function initOpenSkyPolling() {
+  pollOpenSky(); // immediate fetch
+  _openSkyInterval = setInterval(pollOpenSky, LIVE_TRACKING.OPENSKY_INTERVAL_MS);
+  // Countdown timer
+  _planeCountTimer = startCountdown('plane-next', LIVE_TRACKING.OPENSKY_INTERVAL_MS / 1000, pollOpenSky);
+}
+
+function stopOpenSkyPolling() {
+  clearInterval(_openSkyInterval); _openSkyInterval = null;
+  clearInterval(_planeCountTimer); _planeCountTimer = null;
+  const el = document.getElementById('plane-next');
+  if (el) el.textContent = '';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HTML LAYERS — Ships + Mission Aircraft combined
+// ═══════════════════════════════════════════════════════════════
+function applyHtmlLayers() {
+  try {
+    const data = [];
+    if (state.eventLayers.has('ships')) {
+      MISSION_SHIPS.forEach(s => data.push(Object.assign({}, s, {_type:'ship'})));
+    }
+    if (state.eventLayers.has('planes')) {
+      MISSION_PLANES.filter(p => p.active).forEach(p => data.push(Object.assign({}, p, {_type:'plane'})));
+    }
+    globe.htmlElementsData(data);
+  } catch(e) { console.warn('[html layers apply]', e); }
+  // Rebuild trail paths whenever ships/planes layer changes
+  applyPaths();
+}
+
+// fetchAISPositions() removed — replaced by initAISStream() WebSocket
+
+// ═══════════════════════════════════════════════════════════════
+// VISUAL CONTROLS
+// ═══════════════════════════════════════════════════════════════
+function setTexture(mode) {
+  document.querySelectorAll('.vc-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tex-'+mode)?.classList.add('active');
+  const urls = {
+    tactical:'https://cdn.jsdelivr.net/npm/three-globe@2.32.0/example/img/earth-dark.jpg',
+    daylight:'https://cdn.jsdelivr.net/npm/three-globe@2.32.0/example/img/earth-blue-marble.jpg',
+  };
+  if (urls[mode]) {
+    globe.globeImageUrl(urls[mode]);
+    globe.atmosphereColor(mode==='daylight'?'#87ceeb':'#00b8ff');
+  }
+}
+let isRotating=true;
+function toggleRotation() {
+  isRotating=!isRotating;
+  globe.controls().autoRotate=isRotating;
+  document.getElementById('tog-rotation').classList.toggle('on',isRotating);
+}
+let hasAtmo=true;
+function toggleAtmo() {
+  hasAtmo=!hasAtmo;
+  globe.showAtmosphere(hasAtmo);
+  document.getElementById('tog-atmo').classList.toggle('on',hasAtmo);
+}
+let hasGrat=false;
+function toggleGrat() {
+  hasGrat=!hasGrat;
+  globe.showGraticules(hasGrat);
+  document.getElementById('tog-grat').classList.toggle('on',hasGrat);
+}
+let hasCRT=false;
+function toggleCRT() {
+  hasCRT=!hasCRT;
+  document.getElementById('tog-crt')?.classList.toggle('on',hasCRT);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATS BAR — Global / Country
+// ═══════════════════════════════════════════════════════════════
+// popupIdx → which STAT_DATA entry to show on hover (-1 = no popup)
+const GLOBAL_CARDS = [
+  {val:'388M',   lbl:'PERSECUTED CHRISTIANS',   color:'#ff1744',             popupIdx:0},
+  {val:'3.42B',  lbl:'IN UNREACHED PEOPLES',    color:'var(--cyan)',          popupIdx:1},
+  {val:'7,188',  lbl:'UNREACHED PEOPLE GROUPS', color:'#42a5f5',             popupIdx:2},
+  {val:'40.3M',  lbl:'IN MODERN SLAVERY',       color:'#9c27b0',             popupIdx:3},
+  {val:'4,849',  lbl:'DEATHS FOR FAITH 2025',   color:'#ff6d00',             popupIdx:4},
+  {val:'1,700+', lbl:'LANGUAGES LACK SCRIPTURE',color:'#00897b',             popupIdx:5},
+];
+
+function setStatsCards(cards) {
+  for (let i=0; i<6; i++) {
+    const el = document.getElementById('sc-'+i);
+    if (!el) continue;
+    const c = cards[i] || {val:'—', lbl:'NO DATA', color:'rgba(0,229,255,0.2)', popupIdx:-1};
+    const valEl = el.querySelector('.sc-val');
+    const lblEl = el.querySelector('.sc-lbl');
+    const flagEl = el.querySelector('.sc-flag');
+    valEl.textContent = c.val;
+    valEl.style.color = c.color;
+    valEl.style.textShadow = `0 0 14px ${c.color}66`;
+    lblEl.textContent = c.lbl;
+    if (flagEl) flagEl.textContent = c.flag||'';
+    // Update which STAT_DATA popup this card triggers (-1 = none)
+    const idx = (c.popupIdx !== undefined) ? c.popupIdx : i;
+    el.dataset.stat = String(idx);
+    el.style.cursor = idx >= 0 ? 'pointer' : 'default';
+  }
+}
+
+function resetStatsBar() {
+  document.getElementById('stats-context-label').style.display = '';
+  document.getElementById('stats-context-name').style.display = 'none';
+  document.getElementById('stats-reset-hint').style.display = 'none';
+  setStatsCards(GLOBAL_CARDS);
+  document.getElementById('country-info').innerHTML = '<div class="hint">// SELECT COUNTRY OR MARKER //</div>';
+  document.getElementById('point-info').innerHTML = '';
+}
+
+function updateStatsBar(iso) {
+  if (!iso) return;
+  const w=wMap[iso], j=jMap[iso], b=bMap[iso], net=iMap[iso], ref=refMap[iso], pov=povMap[iso], fam=famMap[iso], usc=uscrfMap[iso];
+  if (!w&&!j&&!b&&!net&&!ref&&!pov&&!fam&&!usc) return;
+  const nm = (w?.n||j?.n||b?.n||net?.n||ref?.n||pov?.n||fam?.n||usc?.n||iso).toUpperCase();
+
+  // Show country name header
+  document.getElementById('stats-context-label').style.display = 'none';
+  const nameEl = document.getElementById('stats-context-name');
+  nameEl.textContent = '◈ '+nm;
+  nameEl.style.display = '';
+  document.getElementById('stats-reset-hint').style.display = '';
+
+  // Build up to 6 cards from available data
+  const cards = [];
+
+  if (w) {
+    const col = w.lv==='Extreme'?'#ff1744':w.lv==='Very High'?'#ff6d00':'#ffa000';
+    cards.push({val:`#${w.r}`,    lbl:'WWL RANK 2026',      color:col,      flag:'PERSECUTION', popupIdx:0});
+    cards.push({val:`${w.s}/100`, lbl:'PERSECUTION SCORE',  color:col,      flag:w.lv.toUpperCase(), popupIdx:0});
+    cards.push({val:fmt(w.p),     lbl:'AT-RISK CHRISTIANS', color:'#e0f7fa',flag:'',            popupIdx:0});
+  }
+  if (j) {
+    cards.push({val:`${j.u}%`,  lbl:'IN UNREACHED PGs',   color:'#42a5f5',flag:'UNREACHED', popupIdx:1});
+    if (cards.length < 5)
+      cards.push({val:`${j.g}`, lbl:'UNREACHED PG COUNT', color:'#42a5f5',flag:'',          popupIdx:2});
+  }
+  if (fam && cards.length < 6) {
+    const phaseCol = fam.phase>=5?'#ff1744':fam.phase>=4?'#ff5722':'#ff9800';
+    const phaseLabel = ['','MINIMAL','STRESSED','CRISIS','EMERGENCY','FAMINE'][fam.phase]||'CRISIS';
+    cards.push({val:`PHASE ${fam.phase}`,lbl:'IPC FOOD CRISIS',      color:phaseCol, flag:phaseLabel,   popupIdx:-1});
+  }
+  if (ref && cards.length < 6) {
+    cards.push({val:fmt(ref.idp*1000||0),lbl:'INTERNALLY DISPLACED', color:'#4ade80',flag:'UNHCR 2024', popupIdx:-1});
+  }
+  if (pov && cards.length < 6) {
+    cards.push({val:`${pov.score}%`,     lbl:'IN EXTREME POVERTY',   color:'#ffa726',flag:'WORLD BANK', popupIdx:-1});
+  }
+  if (b && cards.length < 6) {
+    cards.push({val:`${b.score}/5`,      lbl:'BIBLE ACCESS SCORE',   color:'#4db6ac',flag:'WYCLIFFE',   popupIdx:5});
+  }
+  if (net && cards.length < 6) {
+    cards.push({val:String(net.score),   lbl:'INTERNET REPRESSION',  color:'#ff7043',flag:net.status,   popupIdx:-1});
+  }
+  if (usc && cards.length < 6) {
+    const tierLabel = usc.tier==='CPC'?'CPC':usc.tier==='CPC_REC'?'CPC REC':'WATCH LIST';
+    cards.push({val:tierLabel,           lbl:'USCIRF DESIGNATION',   color:'#ef9a9a',flag:'USCIRF 2025',popupIdx:0});
+  }
+
+  // Pad to 6 — no popup for empty slots
+  while (cards.length < 6) cards.push({val:'—', lbl:'NO DATA', color:'rgba(0,229,255,0.2)', flag:'', popupIdx:-1});
+
+  setStatsCards(cards.slice(0,6));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GLOBE EVENTS + CLOCK
+// ═══════════════════════════════════════════════════════════════
+globe.onGlobeClick(coords=>{
+  document.getElementById('coords').textContent=`LAT: ${coords.lat.toFixed(2)}° // LNG: ${coords.lng.toFixed(2)}°`;
+  globe.controls().autoRotate=false;
+  selectedNumId = null;
+  resetStatsBar();
+  applyCountryLayer(state.countryLayer); // clear selection glow
+});
+
+(function tick(){
+  const t=new Date().toISOString().replace('T',' ').slice(0,19)+'Z';
+  document.getElementById('timestamp').textContent=t;
+  setTimeout(tick,1000);
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// HEATMAP TOGGLE
+// ═══════════════════════════════════════════════════════════════
+function toggleHeatmap() {
+  state.showHeatmap = !state.showHeatmap;
+  document.getElementById('tog-heatmap')?.classList.toggle('on', state.showHeatmap);
+  applyHeatmap(state.countryLayer);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PATH LAYER — merges 10/40 Window + active vessel/aircraft trails
+// ═══════════════════════════════════════════════════════════════
+function applyPaths() {
+  try {
+    const paths = [];
+    if (state.show1040) paths.push(...PATHS_1040);
+    // Ship trails — shown when ships toggle is on
+    if (state.eventLayers.has('ships')) {
+      TRAILS.filter(t => t.type === 'ship').forEach(t =>
+        paths.push(Object.assign({}, t, {_trail: true}))
+      );
+    }
+    // Plane trails — shown when planes toggle is on
+    if (state.eventLayers.has('planes')) {
+      TRAILS.filter(t => t.type === 'plane').forEach(t =>
+        paths.push(Object.assign({}, t, {_trail: true}))
+      );
+    }
+    globe.pathsData(paths);
+  } catch(e) { console.warn('[applyPaths]', e); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 10/40 WINDOW TOGGLE
+// ═══════════════════════════════════════════════════════════════
+function toggle1040() {
+  state.show1040 = !state.show1040;
+  document.getElementById('tog-1040')?.classList.toggle('on', state.show1040);
+  applyPaths();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MISSION FLOW ARCS TOGGLE
+// ═══════════════════════════════════════════════════════════════
+function toggleArcs() {
+  state.showArcs = !state.showArcs;
+  document.getElementById('tog-arcs')?.classList.toggle('on', state.showArcs);
+  try {
+    globe.arcsData(state.showArcs ? MISSION_ARCS : []);
+  } catch(e) { console.warn('[arcs toggle]', e); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 2D / 3D VIEW TOGGLE
+// ═══════════════════════════════════════════════════════════════
+let is3D = true;
+let savedPOV = null;
+
+function set3D(to3d) {
+  if (to3d === is3D) return;
+  is3D = to3d;
+
+  if (!to3d) {
+    // Save current POV and fly to flat disk view
+    savedPOV = globe.pointOfView();
+    globe.controls().autoRotate = false;
+    globe.controls().enableRotate = false;
+    globe.pointOfView({ lat: 18, lng: 55, altitude: 3.8 }, 1000);
+    // After fly, narrow the FOV to ~10° for near-orthographic flat disk look
+    setTimeout(() => {
+      try { globe.camera().fov = 10; globe.camera().updateProjectionMatrix(); } catch(e) {}
+    }, 500);
+    setStatus('2D MODE — drag to pan');
+  } else {
+    // Restore FOV immediately so transition back feels fluid
+    try { globe.camera().fov = 75; globe.camera().updateProjectionMatrix(); } catch(e) {}
+    globe.controls().enableRotate = true;
+    globe.pointOfView(savedPOV || { lat: 22, lng: 52, altitude: 2.2 }, 1000);
+    setStatus('3D MODE');
+  }
+
+  document.getElementById('btn-3d').classList.toggle('active', to3d);
+  document.getElementById('btn-2d').classList.toggle('active', !to3d);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// WELCOME MODAL — closeModal() is defined early (above globe-el)
+// so the ENTER MAP button works even if this script has any error.
+// The early definition takes precedence; this is just a no-op alias.
+// ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// DROPDOWN TOGGLE
+// ═══════════════════════════════════════════════════════════════
+function toggleDD(contentId, headerId) {
+  const content = document.getElementById(contentId);
+  const header  = document.getElementById(headerId);
+  if (!content) return;
+  const isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  if (header) header.classList.toggle('open', !isOpen);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PERSECUTION RANK LIST — build + fly-to
+// ═══════════════════════════════════════════════════════════════
+function buildPersecutionList() {
+  const list = document.getElementById('persecution-list');
+  if (!list) return;
+  // Sort WWL by rank ascending
+  const sorted = [...WWL].sort((a,b) => a.r - b.r);
+  list.innerHTML = sorted.map(d => {
+    const c = CENT[d.i];
+    const lat = c ? c.a : 0;
+    const lng = c ? c.o : 0;
+    const cls = d.lv === 'Extreme' ? 'extreme' : d.lv === 'Very High' ? 'very-high' : 'high';
+    return `<div class="pr-item" onclick="flyToCountry('${d.i}',${lat},${lng})" title="${d.n} — ${d.lv} (${d.s})">
+      <span class="pr-rank">${d.r}</span>
+      <span class="pr-name">${d.n}</span>
+      <span class="pr-score ${cls}">${d.s}</span>
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// selectCountry — centralised selection: glow + stats + info
+// ─────────────────────────────────────────────────────────────
+function selectCountry(numId) {
+  selectedNumId = numId;
+  const iso = N2I[numId];
+  showInfo(numId);
+  updateStatsBar(iso);
+  // Re-apply layer so altitude boost + cyan cap + sel ring all render
+  applyCountryLayer(state.countryLayer);
+}
+
+function flyToCountry(iso, lat, lng) {
+  globe.controls().autoRotate = false;
+  const tog = document.getElementById('tog-rotation');
+  if (tog) tog.classList.remove('on');
+  globe.pointOfView({ lat, lng, altitude: 1.5 }, 1200);
+  // Select country after fly animation settles
+  setTimeout(() => {
+    const entry = Object.entries(N2I).find(([k,v]) => v === iso);
+    if (entry) selectCountry(parseInt(entry[0]));
+  }, 1300);
+}
+
+// Build list once DOM is ready
+buildPersecutionList();
+
+// ── Control-row tooltips ──────────────────────────────────────
+(function() {
+  const tip = document.getElementById('ctrl-tip');
+  document.querySelectorAll('.vc-row[data-tip], .layer-item[data-tip]').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      tip.textContent = row.dataset.tip;
+      tip.classList.add('show');
+    });
+    row.addEventListener('mousemove', e => {
+      const tipW = 210;
+      // Left panel → tooltip to the right; right panel → tooltip to the left
+      const x = e.clientX < window.innerWidth / 2
+        ? e.clientX + 14
+        : Math.max(8, e.clientX - tipW - 14);
+      const y = Math.min(window.innerHeight - 100, e.clientY - 14);
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+    });
+    row.addEventListener('mouseleave', () => {
+      tip.classList.remove('show');
+    });
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// STAT CARD POPUPS
+// ═══════════════════════════════════════════════════════════════
+
+const STAT_DATA = [
+  { // 0 — Persecuted Christians
+    title: 'PERSECUTED CHRISTIANS',
+    color: '#ff1744',
+    rows: [
+      {lbl:'Total under pressure',   val:'388 million'},
+      {lbl:'Extreme persecution',     val:'16 countries'},
+      {lbl:'Highest count',           val:'China — 96M'},
+      {lbl:'Fastest growing threat',  val:'India (+22% YoY)'},
+      {lbl:'Primary region',          val:'Sub-Saharan Africa'},
+    ],
+    note:'In 2024, Nigeria alone accounted for 4,118 of 4,849 documented deaths for faith — 85% of the global total.'
+  },
+  { // 1 — In Unreached Peoples
+    title: 'IN UNREACHED PEOPLES',
+    color: '#42a5f5',
+    rows: [
+      {lbl:'Population in UPGs',     val:'3.42 billion'},
+      {lbl:'% of world population',  val:'42.6%'},
+      {lbl:'Largest unreached bloc', val:'Indo-Iranian peoples'},
+      {lbl:'Countries >50% unreached',val:'48'},
+      {lbl:'Primary zone',           val:'10/40 Window'},
+    ],
+    note:'Less than 1% of all Christian mission resources and workers are directed toward the 3.42B in unreached people groups.'
+  },
+  { // 2 — Unreached People Groups
+    title: 'UNREACHED PEOPLE GROUPS',
+    color: '#42a5f5',
+    rows: [
+      {lbl:'Total UPGs',             val:'7,188'},
+      {lbl:'Frontier peoples (FPG)', val:'4,800+'},
+      {lbl:'Indo-Iranian groups',    val:'2,400+'},
+      {lbl:'Turkic groups',          val:'450+'},
+      {lbl:'Arabic peoples',         val:'280+'},
+    ],
+    note:'A Frontier People Group has less than 0.1% Christian and no church capable of reaching the rest without outside help.'
+  },
+  { // 3 — In Modern Slavery
+    title: 'IN MODERN SLAVERY',
+    color: '#ce93d8',
+    rows: [
+      {lbl:'Total in slavery',       val:'40.3 million'},
+      {lbl:'Forced labour',          val:'27.6 million'},
+      {lbl:'Forced marriage',        val:'22.8 million'},
+      {lbl:'Highest risk nation',    val:'North Korea'},
+      {lbl:'Largest volume nation',  val:'India'},
+    ],
+    note:'Women and girls account for 71% of all modern slavery victims globally. Conflict zones see 3× the global average prevalence.'
+  },
+  { // 4 — Deaths for Faith
+    title: 'DEATHS FOR FAITH 2025',
+    color: '#ff6d00',
+    rows: [
+      {lbl:'Total documented deaths', val:'4,849'},
+      {lbl:'Nigeria alone',           val:'4,118 (85%)'},
+      {lbl:'DR Congo',                val:'261'},
+      {lbl:'Mozambique',              val:'185'},
+      {lbl:'Primary perpetrators',    val:'Jihadist militants'},
+    ],
+    note:'Open Doors estimates true martyrdom figures may be 5–10× higher due to underreporting in closed and conflict nations.'
+  },
+  { // 5 — Languages Lack Scripture
+    title: 'LANGUAGES LACK SCRIPTURE',
+    color: '#2dd4bf',
+    rows: [
+      {lbl:'Languages without Bible', val:'1,700+'},
+      {lbl:'Active translations',     val:'1,800+ projects'},
+      {lbl:'Languages needing work',  val:'700+ identified'},
+      {lbl:'Most concentrated in',    val:'PNG, India, Nigeria'},
+      {lbl:'Speakers affected',       val:'~225 million'},
+    ],
+    note:'Wycliffe Bible Translators estimates that with current technology, every language community could have Scripture access by 2038.'
+  },
+];
+
+// Also define the expand-panel content (same data, all 6 at once)
+function buildExpandPanel() {
+  const panel = document.getElementById('stats-expand-panel');
+  if (!panel || panel.dataset.built) return;
+  panel.dataset.built = '1';
+  panel.innerHTML = STAT_DATA.map((d,i) => `
+    <div class="sep-card">
+      <div class="sep-card-title" style="color:${d.color}">${d.title}</div>
+      ${d.rows.map(r=>`<div class="sep-row"><span class="sep-lbl">${r.lbl}</span><span class="sep-val">${r.val}</span></div>`).join('')}
+      <div class="sep-note">${d.note}</div>
+    </div>
+  `).join('');
+}
+
+let popupPinned = false;
+let popupHideTimer = null;
+
+function buildCountryPopupRows(iso, statIdx) {
+  // Returns {rows, note, title, color} for a country + stat category, or null if no data
+  const w = wMap[iso], j = jMap[iso], b = bMap[iso], usc = uscrfMap[iso];
+  const countryName = (w?.n || j?.n || b?.n || usc?.n || iso).toUpperCase();
+
+  if (statIdx === 0) {
+    // PERSECUTION — WWL + USCIRF
+    if (!w && !usc) return null;
+    const rows = [];
+    if (w) {
+      const vc = w.lv==='Extreme'?'#ff1744':w.lv==='Very High'?'#ff6d00':'#ffa000';
+      rows.push({lbl:'COUNTRY', val:countryName});
+      rows.push({lbl:'WWL RANK 2026', val:`#${w.r} / 50`});
+      rows.push({lbl:'PERSECUTION SCORE', val:`${w.s} / 100`});
+      rows.push({lbl:'THREAT LEVEL', val:w.lv.toUpperCase()});
+      rows.push({lbl:'AT-RISK CHRISTIANS', val:fmt(w.p)});
+    }
+    if (usc) {
+      const tierLabel = usc.tier==='CPC'?'COUNTRY OF PARTICULAR CONCERN':usc.tier==='CPC_REC'?'CPC (USCIRF RECOMMENDED)':'SPECIAL WATCH LIST';
+      rows.push({lbl:'USCIRF DESIGNATION', val:tierLabel});
+    }
+    const note = w?.note || usc?.note || '';
+    return {rows, note, title:'PERSECUTION — '+countryName, color:'#ff1744'};
+  }
+
+  if (statIdx === 1 || statIdx === 2) {
+    // UNREACHED PEOPLES
+    if (!j) return null;
+    const rows = [
+      {lbl:'COUNTRY', val:countryName},
+      {lbl:'% IN UNREACHED PGs', val:`${j.u}%`},
+      {lbl:'UNREACHED PG COUNT', val:String(j.g)},
+      {lbl:'TOTAL POPULATION', val:fmt(j.p)},
+    ];
+    return {rows, note:'Source: Joshua Project 2025', title:'UNREACHED PEOPLES — '+countryName, color:'var(--cyan)'};
+  }
+
+  if (statIdx === 5) {
+    // BIBLE ACCESS
+    if (!b) return null;
+    const sc = ['','MINOR SHORTAGE','SIGNIFICANT RESTRICTION','MODERATE BAN','SEVERE BAN','TOTAL BAN'];
+    const rows = [
+      {lbl:'COUNTRY', val:countryName},
+      {lbl:'RESTRICTION LEVEL', val:sc[b.score]||'UNKNOWN'},
+      {lbl:'SEVERITY SCORE', val:`${b.score} / 5`},
+    ];
+    return {rows, note:b.note||'Source: Wycliffe / Open Doors 2025', title:'BIBLE ACCESS — '+countryName, color:'#00897b'};
+  }
+
+  // Indices 3 (Modern Slavery) and 4 (Deaths for Faith) — no per-country data
+  return null;
+}
+
+function showStatPopup(idx, anchorEl) {
+  if (idx < 0) return;  // card has no matching category — show nothing
+  const d = STAT_DATA[idx];
+  if (!d) return;
+  clearTimeout(popupHideTimer);
+
+  const popup = document.getElementById('stat-popup');
+
+  // Use country-specific data when a country is selected and we have it
+  let titleText = d.title;
+  let titleColor = d.color;
+  let rowsHtml = '';
+
+  if (selectedNumId !== null) {
+    const iso = N2I[selectedNumId];
+    if (iso) {
+      const country = buildCountryPopupRows(iso, idx);
+      if (country) {
+        titleText = country.title;
+        titleColor = country.color;
+        rowsHtml = `
+          ${country.rows.map(r=>`<div class="sp-row"><span class="sp-lbl">${r.lbl}</span><span class="sp-val">${r.val}</span></div>`).join('')}
+          <div class="sp-note">${country.note}</div>
+        `;
+      }
+    }
+  }
+
+  // Fall back to global stats if no country data
+  if (!rowsHtml) {
+    rowsHtml = `
+      ${d.rows.map(r=>`<div class="sp-row"><span class="sp-lbl">${r.lbl}</span><span class="sp-val">${r.val}</span></div>`).join('')}
+      <div class="sp-note">${d.note}</div>
+    `;
+  }
+
+  document.getElementById('stat-popup-title').textContent = titleText;
+  document.getElementById('stat-popup-title').style.color = titleColor;
+
+  const body = document.getElementById('stat-popup-body');
+  body.innerHTML = rowsHtml;
+
+  // Position popup above the hovered card
+  const rect = anchorEl.getBoundingClientRect();
+  const popupW = 280;
+  let left = rect.left + rect.width/2 - popupW/2;
+  left = Math.max(8, Math.min(left, window.innerWidth - popupW - 8));
+  popup.style.left = left + 'px';
+  popup.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+
+  popup.classList.add('show');
+  document.getElementById('btn-pin-stat').classList.toggle('pinned', popupPinned);
+}
+
+function hideStatPopup() {
+  if (popupPinned) return;
+  popupHideTimer = setTimeout(() => {
+    document.getElementById('stat-popup').classList.remove('show');
+  }, 180);
+}
+
+function togglePinPopup() {
+  popupPinned = !popupPinned;
+  document.getElementById('btn-pin-stat').classList.toggle('pinned', popupPinned);
+  document.getElementById('btn-pin-stat').title = popupPinned ? 'Unpin' : 'Pin open';
+}
+
+function closeStatPopup() {
+  popupPinned = false;
+  document.getElementById('stat-popup').classList.remove('show');
+  document.getElementById('btn-pin-stat').classList.remove('pinned');
+}
+
+let statsExpanded = false;
+function toggleExpandStats() {
+  statsExpanded = !statsExpanded;
+  buildExpandPanel();
+  const panel = document.getElementById('stats-expand-panel');
+  const btn = document.getElementById('btn-expand-stats');
+  panel.classList.toggle('open', statsExpanded);
+  btn.classList.toggle('open', statsExpanded);
+  btn.textContent = statsExpanded ? '⊟ COLLAPSE' : '⊞ EXPAND';
+}
+
+// Wire up hover events on stat cards
+document.querySelectorAll('.sc[data-stat]').forEach(card => {
+  card.style.cursor = 'pointer';
+  card.addEventListener('mouseenter', () => showStatPopup(+card.dataset.stat, card));
+  card.addEventListener('mouseleave', hideStatPopup);
+});
+
+// Keep popup alive when hovering over it
+document.getElementById('stat-popup').addEventListener('mouseenter', () => clearTimeout(popupHideTimer));
+document.getElementById('stat-popup').addEventListener('mouseleave', hideStatPopup);
+</script>
+</body>
+</html>
+E html>
 <html lang="en"><!DOCTYPE html>
 <html lang="en">
 <head>
